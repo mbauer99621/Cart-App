@@ -17,7 +17,7 @@ const retrieveRandomRecipe = async (): Promise<RecipeCard> => {
             throw new Error(response.statusText);
         }
 
-        return recipe;
+        return recipe.meals;
 
     } catch(err) {
         console.error('Error getting random recipe: ', err);

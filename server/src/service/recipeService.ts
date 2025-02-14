@@ -14,7 +14,7 @@ class RecipeService {
 
         // console.log(recipeBody);
 
-        return recipeBody.meals[0];
+        return recipeBody.meals;
     }
 }
 
