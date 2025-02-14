@@ -1,7 +1,7 @@
 function Footer() {
     return (
       <footer>
-        <div class="footer-copyright">
+        <div className="footer-copyright">
           <p>&copy;  All Rights Reserved.</p>
         </div>
       </footer>
