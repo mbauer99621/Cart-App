@@ -7,6 +7,9 @@ import App from './App.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
 import Home from './pages/LandingPage.tsx';
 import Login from './pages/LoginPage.tsx';
+import MyCart from './pages/MyCart.tsx';
+import MyFridge from './pages/MyFridge.tsx';
+import SavedRecipes from './pages/SavedRecipes.tsx';
 
 const router = createBrowserRouter([
   {
@@ -19,8 +22,20 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/login',
+        path: '/LoginPage',
         element: <Login />,
+      },
+      {
+        path: '/MyCart',
+        element: <MyCart />,
+      },
+      {
+        path: '/MyFridge',
+        element: <MyFridge />,
+      },
+      {
+        path: '/SavedRecipes',
+        element: <SavedRecipes />,
       },
     ],
   },
