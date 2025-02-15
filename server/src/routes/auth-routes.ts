@@ -3,7 +3,39 @@ import { User } from '../models/user.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-export const login = async (req: Request, res: Response) => {
+const router = Router();
+
+// POST /signup - Register a new user
+router.post("/signup", async (req: Request, res: Response): Promise<Response | void> => {
+  try {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ success: false, message: "All fields are required." });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "Email is already in use." });
+    }
+
+    // Hash password before saving
+    // const hashedPassword = await bcrypt.hash(password, 20);
+
+    // Create new user
+    //await User.create({ username, email, password: hashedPassword });
+    await User.create({ username, email, password });
+
+    res.status(201).json({ success: true, message: "User registered successfully." });
+  } catch (err) {
+    console.error("Signup error:", err);
+    res.status(500).json({ success: false, message: "Server error. Please try again." });
+  }
+});
+
+
+export const login = async (req: Request, res: Response): Promise<Response> => {
   const { username, password } = req.body;
   console.log("Login attempt for:", username);
 
@@ -43,7 +75,6 @@ try {
   }
 };
 
-const router = Router();
 
 // POST /login - Login a user
 router.post('/LoginPage', login);
