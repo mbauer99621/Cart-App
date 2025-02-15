@@ -25,10 +25,11 @@
     color: #c0c1cf;
     text-decoration: inherit;
   }
-  a:hover {
-    color: #616266;
-  }
   
+  a:hover {
+    color: #526dda;
+  }
+
   body {
     margin: 0;
   }
@@ -84,4 +85,32 @@
     color: red;
     font-weight: bold;
     margin-top: 10px;
+  }
+
+  @keyframes bounce1 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes bounce2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-25px); }
+  }
+  
+  @keyframes bounce3 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+  }
+  
+  /* Apply animations */
+  .animate-bounce-1 {
+    animation: bounce1 4s infinite;
+  }
+  
+  .animate-bounce-2 {
+    animation: bounce2 6s infinite;
+  }
+  
+  .animate-bounce-3 {
+    animation: bounce3 5s infinite;
   }
