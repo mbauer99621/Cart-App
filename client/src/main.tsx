@@ -10,6 +10,7 @@ import Login from './pages/LoginPage.tsx';
 import MyCart from './pages/MyCart.tsx';
 import MyFridge from './pages/MyFridge.tsx';
 import SavedRecipes from './pages/SavedRecipes.tsx';
+import SignUpPage from './pages/SignUpPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: '/SavedRecipes',
         element: <SavedRecipes />,
+      },
+      {
+        path: '/signup',
+        element: <SignUpPage />,
       },
     ],
   },

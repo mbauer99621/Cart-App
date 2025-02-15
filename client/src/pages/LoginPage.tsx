@@ -3,6 +3,7 @@ import Auth from '../utils/auth';
 import { login } from '../api/authAPI';
 import type { UserLogin } from '../interfaces/UserLogin';
 import FoodEmojis from '../components/UI/FoodEmojis';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [loginData, setLoginData] = useState<UserLogin>({
@@ -90,9 +91,9 @@ const Login = () => {
             {/* Signup Link */}
             <p className="text-center text-gray-600 text-sm mt-4">
               Don't have an account?{' '}
-              <a href="/signup" className="text-blue-500 hover:underline">
+              <Link to="/signup" className="text-blue-500 hover:underline">
                 Sign up
-              </a>
+              </Link>
             </p>
           </form>
         </div>
