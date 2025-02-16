@@ -12,10 +12,17 @@ import MyFridge from './pages/MyFridge.tsx';
 import SavedRecipes from './pages/SavedRecipes.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
 
+import { CartFridgeProvider } from './context/CartFridgeProvider.tsx';
+//import CartFridgeRoutes from './routes/CartFridgeRoutes.tsx';
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+    <CartFridgeProvider>
+      <App />
+    </CartFridgeProvider>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
