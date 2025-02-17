@@ -13,6 +13,7 @@ export default function Nav() {
     { path: "/MyCart", label: "My Cart" },
     { path: "/MyFridge", label: "My Fridge" },
     { path: "/SavedRecipes", label: "My Recipes" },
+    { path: "/MyAccount", label: "My Account" },
     ]}
     />
     </div>
