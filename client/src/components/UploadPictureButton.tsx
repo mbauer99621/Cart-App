@@ -1,8 +1,12 @@
+import { useState } from "react";
+
 interface UploadPictureButtonProps {
     setImage: (newImage: string | null) => void;
   }
   
   export default function UploadPictureButton({ setImage }: UploadPictureButtonProps) {
+    const [showRefreshMessage, setShowRefreshMessage] = useState(false);
+
     // Handle image upload and save to LocalStorage
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
@@ -12,6 +16,7 @@ interface UploadPictureButtonProps {
           const imageData = reader.result as string;
           setImage(imageData);
           localStorage.setItem("profilePicture", imageData);
+          setShowRefreshMessage(true);
         };
         reader.readAsDataURL(file);
       }
@@ -21,9 +26,13 @@ interface UploadPictureButtonProps {
     const handleRemoveImage = () => {
       setImage(null);
       localStorage.removeItem("profilePicture");
+      setShowRefreshMessage(true);
     };
   
     return (
+    <div className="flex flex-col items-center space-y-2">
+
+        // Buttons
       <div className="flex space-x-3">
         <label className="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600 transition">
           Upload Picture
@@ -36,6 +45,11 @@ interface UploadPictureButtonProps {
           Remove
         </button>
       </div>
+
+        {showRefreshMessage && (
+            <p className="text-green-300 text-sm font-semibold mt-2">Page refresh required.</p>
+        )}
+    </div>
     );
   }
   

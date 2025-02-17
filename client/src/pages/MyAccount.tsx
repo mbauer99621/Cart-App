@@ -1,35 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth"; // Assuming you have an AuthContext
 import FoodEmojis from '../components/UI/FoodEmojis';
 import ProfilePicture from "../components/DisplayProfilePic";
 import UploadPictureButton from "../components/UploadPictureButton";
 //import { useCartFridge } from "../context/CartFridgeContext"; // If storing subscriptions in context
 
+
 export default function MyAccount() {
-  const { user } = useAuth(); // Fetch logged-in user info
-  const [showPassword, setShowPassword] = useState(false);
-  const [allergy, setAllergy] = useState("");
-  const [allergies, setAllergies] = useState<string[]>([]);
-  const [emailSubscribed, setEmailSubscribed] = useState(false);
-  const [premiumMember, setPremiumMember] = useState(false);
+    const { user } = useAuth(); // Fetch logged-in user info
+    const [showPassword, setShowPassword] = useState(false);
+    const [allergy, setAllergy] = useState("");
+    const [allergies, setAllergies] = useState<string[]>([]);
+    const [emailSubscribed, setEmailSubscribed] = useState(false);
+    const [premiumMember, setPremiumMember] = useState(false);
 
+    // Username / Email state
+    const[isEditingUsername, setIsEditingUserName] = useState(false);
+    const [isEditingEmail, setIsEditingEmail] = useState(false);
 
+    const[username, setUserName] = useState(user?.username || "Guest");
+    const [email, setEmail] = useState(user?.email || "example@email.com");
 
-  // Toggle password visibility
-  const togglePassword = () => setShowPassword(!showPassword);
+    useEffect(() => {
+      if (user?.username) {
+          setUserName(user.username);
+      }
+      if (user?.email) {
+          setEmail(user.email);
+      }
+  }, [user]);
 
-  // Add an allergy to the list
-  const addAllergy = () => {
-    if (allergy.trim() && !allergies.includes(allergy.trim())) {
-      setAllergies([...allergies, allergy.trim()]);
-      setAllergy("");
+    // Toggle password visibility
+    const togglePassword = () => setShowPassword(!showPassword);
+
+    // Add an allergy to the list
+    const addAllergy = () => {
+        if (allergy.trim() && !allergies.includes(allergy.trim())) {
+            setAllergies([...allergies, allergy.trim()]);
+            setAllergy("");
+        }
+    };    
+
+    // Remove an allergy
+    const removeAllergy = async (index: number) => {
+        setAllergies(allergies.filter((_, i) => i !== index));
+      };
+      
+
+    // Username edit
+    const handleUsernameChange = () => {
+        if (isEditingUsername) {
+            console.log("New username:", username);
+            // implement API request to update username
+        }
+        setIsEditingUserName(!isEditingUsername);
     }
-  };
-
-  // Remove an allergy
-  const removeAllergy = (index: number) => {
-    setAllergies(allergies.filter((_, i) => i !== index));
-  };
 
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center bg-gray-100 p-6 relative overflow-hidden">
@@ -54,18 +79,55 @@ export default function MyAccount() {
         {/* Username */}
         <div className="mb-4">
           <label className="block text-gray-700 font-semibold">Username</label>
+          <div className="flex items-center space-x-2">
           <input
-            className="w-full px-4 py-2 mt-1 border border-gray-400 rounded-lg bg-gray-100 text-gray-700"
+            className={`w-full px-4 py-2 mt-1 border rounded-lg ${
+                isEditingUsername ? "bg-white border-gray-400 text-black" : "bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
             type="text"
-            value={user?.username || "Guest"}
-            disabled
+            value={username || "Guest"}
+            disabled={!isEditingUsername}
+            onChange={(e) => setUserName(e.target.value)}
           />
+          <button
+          onClick={handleUsernameChange}
+          className={`px-4 py-2 rounded-md transition ${
+            isEditingUsername ? "bg=green-500 hover:bg-green-600 text-white" : "bg-black hover:bg-gray-700 text-white"
+          }`}
+          >
+            {isEditingUsername ? "Save" : "Change"}
+          </button>
+          </div>
+        </div>
+
+        {/* Email Field - Same Formatting as Username */}
+        <div className="mb-4">
+            <label className="block text-gray-700 font-semibold">Email</label>
+            <div className="flex items-center space-x-2">
+            <input
+                className={`w-full px-4 py-2 border rounded-lg ${
+                    isEditingEmail ? "bg-white border-gray-400 text-black" : "bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={!isEditingEmail}
+            />
+            <button
+                onClick={() => setIsEditingEmail(!isEditingEmail)}
+                className={`px-4 py-2 rounded-md transition ${
+                    isEditingEmail ? "bg-green-500 hover:bg-green-600 text-white" : "bg-black hover:bg-gray-700 text-white"
+                }`}
+            >
+                {isEditingEmail ? "Save" : "Change"}
+            </button>
+            </div>
         </div>
 
         {/* Password */}
         <div className="mb-4">
           <label className="block text-gray-700 font-semibold">Password</label>
-          <div className="relative">
+          <div className="flex items-center space-x-2">
             <input
               className="w-full px-4 py-2 border border-gray-400 text-black rounded-lg"
               type={showPassword ? "text" : "password"}
@@ -74,7 +136,7 @@ export default function MyAccount() {
             />
             <button
               onClick={togglePassword}
-              className="bg-black text-white px4 py-1 rounded-md hover:bg-gray-700 transition-all"
+              className="px4 py-1 bg-black text-white rounded-md hover:bg-gray-700 transition-all"
             >
               {showPassword ? "Hide" : "Show"}
             </button>
@@ -84,25 +146,26 @@ export default function MyAccount() {
         {/* Allergy Input */}
         <div className="mb-4">
           <label className="block text-gray-700 font-semibold">Allergies</label>
-          <div className="flex">
+          <div className="flex items-center space-x-2">
             <input
-              className="w-full px-4 py-2 border border-gray-400 text-black rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition-all"
+              className="w-full px-4 py-2 border border-gray-400 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition-all"
               type="text"
               placeholder="Add allergy"
               value={allergy}
               onChange={(e) => setAllergy(e.target.value)}
             />
             <button
-              className="bg-black text-white px4 py-1 rounded-md hover:bg-gray-700 transition-all"
+              className="px4 py-1 bg-black text-white rounded-md hover:bg-gray-700 transition-all"
               onClick={addAllergy}
             >
               Add
             </button>
           </div>
+        </div>
           {/* Display list of allergies */}
           <ul className="mt-2">
             {allergies.map((allergy, index) => (
-              <li key={index} className="flex justify-between items-center bg-gray-200 px-3 py-1 rounded-lg mt-2">
+              <li key={index} className="flex justify-between items-center text-black bg-gray-200 px-3 py-1 rounded-lg mt-2">
                 {allergy}
                 <button
                   className="text-red-500 hover:text-red-700 ml-2"
@@ -113,7 +176,6 @@ export default function MyAccount() {
               </li>
             ))}
           </ul>
-        </div>
 
         {/* Email Subscription */}
         <div className="mb-4 flex items-center">

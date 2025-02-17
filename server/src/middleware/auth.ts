@@ -1,11 +1,18 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface JwtPayload {
   username: string;
+  email: string;
 }
 
-export const authenticateToken = (
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: JwtPayload;
+  }
+}
+
+export const authenticateToken:RequestHandler = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -17,12 +24,13 @@ export const authenticateToken = (
 
     const secretKey = process.env.JWT_SECRET_KEY || '';
 
-    jwt.verify(token, secretKey, (err, user) => {
+    jwt.verify(token, secretKey, (err, decoded) => {
       if (err) {
         return res.sendStatus(403); // Forbidden
       }
 
-      req.user = user as JwtPayload;
+      const userData = decoded as JwtPayload;
+      req.user = { username: userData.username, email: userData.email }; // Ensure both fields exist
       return next();
     });
   } else {

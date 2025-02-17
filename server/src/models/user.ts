@@ -10,9 +10,9 @@ interface UserAttributes {
 
 interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
-export class User
-  extends Model<UserAttributes, UserCreationAttributes>
-  implements UserAttributes
+export class User 
+extends Model<UserAttributes, UserCreationAttributes> 
+implements UserAttributes 
 {
   public id!: number;
   public username!: string;
@@ -51,8 +51,8 @@ export function UserFactory(sequelize: Sequelize): typeof User {
       },
     },
     {
-      tableName: 'users',
       sequelize,
+      tableName: 'users',
       hooks: {
         beforeCreate: async (user: User) => {
           if (user.password && !user.password.startsWith("$2b$")) {  // ✅ Avoid rehashing
