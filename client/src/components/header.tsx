@@ -9,10 +9,11 @@ export default function Nav() {
 <Navbar
   links={[
     { path: "/", label: "Home" },
+    { path: "/Home", label: "Home" },
     { path: "/LoginPage", label: "Login" },
     { path: "/MyCart", label: "My Cart" },
     { path: "/MyFridge", label: "My Fridge" },
-    { path: "/SavedRecipes", label: "My Recipes" },
+    { path: "/SavedRecipes", label: "My Recipes" }
     ]}
     />
     </div>
