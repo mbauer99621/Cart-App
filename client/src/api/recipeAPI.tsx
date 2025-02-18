@@ -1,7 +1,9 @@
+//import { useEffect, useState } from "react";
 import { Categories } from "../interfaces/Categories.js";
 import { Meals } from "../interfaces/Meals.js";
 import { Recipe, RecipeCard } from "../interfaces/RecipeCard.js";
 import Auth from '../utils/auth';
+
 
 const retrieveRandomRecipe = async (): Promise<Recipe> => {
     try {
