@@ -5,15 +5,6 @@ import { useCartFridge } from "../hooks/useCartFridge";
 export default function MyCart() {
   const { cartItems, moveToFridge, removeFromCart } = useCartFridge();
 
-  // Function to handle removal & update localStorage
-  const handleRemove = (id: number) => {
-    removeFromCart(id);
-
-    // Update localStorage after removal
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    localStorage.setItem("cart", JSON.stringify(updatedCart.map((item) => item.name)));
-  };
-
   return (
     <div className="container">
     <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
@@ -32,7 +23,7 @@ export default function MyCart() {
               <span className="text-lg text-gray-800">{item.name}</span>
               <div className="space-x-2">
                 <AddToFridgeButton id={item.id} onAdd={moveToFridge} />
-                <RemoveButton id={item.id} onRemove={handleRemove} />
+                <RemoveButton id={item.id} onRemove={() => removeFromCart(item.id)} />
               </div>
             </li>
           ))}
