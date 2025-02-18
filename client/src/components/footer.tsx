@@ -16,7 +16,7 @@ export default function Footer() {
           Facebook
         </a>
         <a href="https://x.com/?lang=en" target="_blank" rel="noopener noreferrer" className="hover:text-black">
-          Twitter
+          Twitter 
         </a>
       </div>
     </footer>

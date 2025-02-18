@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router-dom';
+import logo from '../../assets/logo.png';
+
 
 interface NavBarProps {
   links: { path: string; label: string }[];
@@ -9,11 +11,16 @@ export default function NavBar({ links }: NavBarProps) {
   return (
     <nav className="text-white py-4">
       {/* <div className="container mx-auto flex justify-between items-center px-6"> */}
-      <div className="container mx-auto flex flex-col items-center md:flex-row md:justify-between px-6 w-full">
+      <div>
         {/* Logo / Branding */}
-        <h1 className="text-2xl font-bold text-center w-full md:w-auto md:text-left mb-4 md:mb-0">
+        <img 
+          id = "logoImg"
+          src = {logo}
+          alt="Logo"
+        />
+        <h1 id = "h1-Title">
           <NavLink to="/" className="hover:text-gray-400">
-            Recipe Cart
+            TITLE
           </NavLink>
         </h1>
 
