@@ -47,6 +47,21 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
+      // Convert fridge items to a set for lookups
+      const fridgeSet = new Set(fridgeItems.map((item) => item.name.toLowerCase()));
+      const cartSet = new Set(cartItems.map((item) => item.name.toLowerCase()));
+
+      // Filter out ingredients already in the fridge
+      const newIngredients = ingredients.filter(
+        (ingredient) => !fridgeSet.has(ingredient.toLowerCase()) && !cartSet.has(ingredient.toLowerCase())
+      );
+
+      if (newIngredients.length === 0) {
+        setNotification("✅ All ingredients are already in your fridge!");
+        setTimeout(() => setNotification(null), 3000);
+        return;
+      }
+
       const newItems = ingredients.map((name, index) => ({
         id: Date.now() + index,
         name,
@@ -59,6 +74,10 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("cart", JSON.stringify(updatedCart));
         return updatedCart;
       });
+
+      if (newIngredients.length < ingredients.length) {
+        setNotification("⚠️ Some ingredients were already in your fridge/cart and were not added.");
+      }
 
       setTimeout(() => setNotification(null), 3000);
     };
