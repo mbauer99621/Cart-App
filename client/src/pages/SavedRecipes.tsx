@@ -8,18 +8,20 @@ export default function SavedRecipes() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const { addToCart, notification } = useCartFridge();
 
-  useEffect(() => {
-    fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=")
-      .then((res) => res.json())
-      .then((data) => setMeals(data.meals || []))
-      .catch((err) => console.error("Error fetching meals:", err));
-  }, []);
+//  useEffect(() => {
+//    fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=")
+//      .then((res) => res.json())
+//      .then((data) => setMeals(data.meals || []))
+//      .catch((err) => console.error("Error fetching meals:", err));
+//  }, []);
 
   // Load saved recipes from localStorage
-  //useEffect(() => {
-  //  const savedMeals = JSON.parse(localStorage.getItem("savedMeals") || "[]");
-  //  setMeals(savedMeals);
-  //}, []);
+  useEffect(() => {
+
+    const savedMeals = JSON.parse(localStorage.getItem("savedMeals") || "[]");
+    console.log("📥 Loaded saved recipes from localStorage:", savedMeals);
+    setMeals(savedMeals);
+  }, []);
 
   const removeMeal = (idMeal: string) => {
     const updatedMeals = meals.filter((meal) => meal.idMeal !== idMeal);

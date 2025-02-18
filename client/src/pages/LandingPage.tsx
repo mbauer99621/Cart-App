@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Recipe } from "../interfaces/RecipeCard.js";
+import SaveRecipeButton from "./SaveRecipeButton.js";
 
 interface Category {
     idCategory: string;
@@ -102,6 +103,9 @@ const Home = () => {
                                 </ul>
                                 <h4 className="text-2xl font-bold mt-4">Instructions:</h4>
                                 <p className="text-lg">{randomRecipe.strInstructions}</p>
+
+                                {/* ✅ Add the Save Recipe Button */}
+                                <SaveRecipeButton recipe={randomRecipe} />
                             </div>
                         </div>
                     ) : (
