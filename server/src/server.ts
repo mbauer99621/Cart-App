@@ -15,14 +15,18 @@ const __dirname = path.dirname(__filename);
 
 UserFactory(sequelize);
 
+app.use(express.json());
+// Serve API routes first
+app.use(routes);
+
 // Serves static files in the entire client's dist folder
 const clientBuildPath = path.join(__dirname, "../../client/dist");
 app.use(express.static(clientBuildPath));
 
-app.use(express.json());
-app.use(routes);
-
-app.get("*", (_req, res) => {
+app.get("*", (req, res): void => {
+  if (req.originalUrl.startsWith("/api")) {
+    return;
+  }
   res.sendFile(path.join(clientBuildPath, "index.html"));
 });
 

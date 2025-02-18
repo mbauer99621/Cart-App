@@ -19,22 +19,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       try {
         const decoded = jwtDecode<{ username: string; email: string }>(token);
-        const userData = { username: decoded.username, email: decoded.email };
+        //const userData = { username: decoded.username, email: decoded.email };
   
         // Send request with Authorization token
         fetch(`http://localhost:3001/api/get-user/${decoded.username}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Ensure request is authorized
+            //"Authorization": `Bearer ${token}` // Ensure request is authorized
+            "Authorization": `Bearer ${localStorage.getItem("id_token")}`
           }
         })
         .then((res) => res.json())
         .then((data) => {
+          console.log("🔹 Server Response:", data);
           if (data.success) {
             setUser({ username: data.username, email: data.email });
             setIsAuthenticated(true);
-            localStorage.setItem("user", JSON.stringify(userData)); // Save user data
+            localStorage.setItem("user", JSON.stringify(data)); // Save user data
           }
         })
         .catch((err) => console.error("Error fetching user data:", err));
@@ -49,23 +51,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     AuthService.login(token);
     const decoded = jwtDecode<{ username: string; email: string }>(token);
 
-    // Fetch latest user data from backend on login
-    fetch(`http://localhost:3001/auth/get-user/${decoded.username}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setUser({
-            username: data.user.username,
-            email: data.user.email,
-          });
-          setIsAuthenticated(true);
-
-          // Store in localStorage
-          localStorage.setItem("user", JSON.stringify(data.user));
-          localStorage.setItem("isAuthenticated", "true");
-        }
-      })
-      .catch((err) => console.error("Error fetching user data:", err));
+    fetch(`http://localhost:3001/api/get-user/${decoded.username}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        setUser({ username: data.username, email: data.email });
+        setIsAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("isAuthenticated", "true");
+      }
+    })
+    .catch(err => console.error("Error fetching user data:", err));
   };
 
   const logout = () => {
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Clear from localStorage
     localStorage.removeItem("user");
-    localStorage.removeItem("isAuthenticated");
+    //localStorage.removeItem("isAuthenticated");
   };
 
   return (
