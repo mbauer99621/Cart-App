@@ -76,17 +76,20 @@ try {
 router.get("/get-user/:username", authenticateToken, async (req: Request, res: Response) => {
   try {
     const { username } = req.params;
+    console.log("🔍 Fetching user:", username);
 
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
+      console.error("❌ User not found:", username);
       return res.status(404).json({ success: false, message: "User not found" });
     }
-    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-    res.setHeader("Pragma", "no-cache");
-    res.setHeader("Expires", "0");
-    res.setHeader("Surrogate-Control", "no-store");
+    //res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    //res.setHeader("Pragma", "no-cache");
+    //res.setHeader("Expires", "0");
+    //res.setHeader("Surrogate-Control", "no-store");
 
+    console.log("✅ Found user:", user.username, user.email);
     return res.json({
       success: true,
       username: user.username,
