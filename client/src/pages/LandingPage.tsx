@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Recipe } from "../interfaces/RecipeCard.js";
-import { retrieveRandomRecipe } from "../api/recipeAPI";
 
 interface Category {
     idCategory: string;
@@ -10,7 +10,7 @@ interface Category {
 
 const Home = () => {
     const [categories, setCategories] = useState<Category[]>([]);
-    const [randomRecipe, setRandomRecipe] = useState<Recipe | null>(null); // Use null to avoid an empty object
+    const [randomRecipe, setRandomRecipe] = useState<Recipe | null>(null);
 
     useEffect(() => {
         fetchCategories();
@@ -32,8 +32,12 @@ const Home = () => {
 
     const getRandomRecipe = async () => {
         try {
-            const recipe = await retrieveRandomRecipe();
-            setRandomRecipe(recipe);
+            const response = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
+            const data = await response.json();
+
+            if (data.meals && data.meals.length > 0) {
+                setRandomRecipe(data.meals[0]);
+            }
         } catch (err) {
             console.error("Error fetching random recipe:", err);
         }
@@ -41,35 +45,68 @@ const Home = () => {
 
     return (
         <section id="home-section">
-            <h1>HomePage</h1>
+            <h2 className="text-center text-2xl font-bold my-6">Categories</h2>
 
             {/* Recipe Categories Section */}
             <section id="recipe-categories-section">
                 <div id="recipe-categories-container">
                     <div id="recipe-categories-wrapper">
-                        <div id="recipe-categories">
+                        <div id="recipe-categories" className="flex flex-wrap justify-center gap-6">
                             {categories.length > 0 ? (
                                 categories.map((category) => (
-                                    <div key={category.idCategory} className="category-card">
-                                        <h3>{category.strCategory}</h3>
-                                        <img src={category.strCategoryThumb} alt={category.strCategory} />
-                                    </div>
+                                    <Link
+                                        key={category.idCategory}
+                                        to={`/category/${category.strCategory}`}
+                                        className="flex flex-col items-center justify-center p-4"
+                                    >
+                                        <h3 className="text-center">{category.strCategory}</h3>
+                                        <img
+                                            src={category.strCategoryThumb}
+                                            alt={category.strCategory}
+                                            className="w-24 h-24 object-cover"
+                                        />
+                                    </Link>
                                 ))
                             ) : (
                                 <p>Loading categories...</p>
                             )}
-
-                            {/* Random Recipe Section */}
-                            <div>
-                                <h2 className="text-4xl font-bold dark:text-white">Random Recipe:</h2>
-                                {randomRecipe ? (
-                                    <h3 className="text-3xl font-bold dark:text-white">{randomRecipe.strMeal}</h3>
-                                ) : (
-                                    <p>Loading random recipe...</p>
-                                )}
-                            </div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* Random Recipe Section */}
+            <section className="flex justify-center items-center w-full min-h-screen py-6">
+                <div className="flex flex-col md:flex-row items-center md:items-start w-full max-w-screen-xl p-6  rounded-lg">
+                    {randomRecipe ? (
+                        <div className="flex flex-col md:flex-row items-center md:items-start w-full">
+                            {/* Recipe Image (Left) */}
+                            <img
+                                src={randomRecipe.strMealThumb}
+                                alt={randomRecipe.strMeal}
+                                className="w-full md:w-1/3 rounded-lg shadow-md"
+                            />
+
+                            {/* Recipe Details (Right) */}
+                            <div className="md:ml-6 flex-1">
+                                <h2 className="text-4xl font-bold dark:text-black">{randomRecipe.strMeal}</h2>
+                                <h4 className="text-2xl font-bold mt-4">Ingredients:</h4>
+                                <ul className="list-disc list-inside">
+                                    {Array.from({ length: 20 }).map((_, i) => {
+                                        const ingredientKey = `strIngredient${i + 1}` as keyof Recipe;
+                                        const measureKey = `strMeasure${i + 1}` as keyof Recipe;
+                                        const ingredient = randomRecipe[ingredientKey];
+                                        const measure = randomRecipe[measureKey];
+                                        return ingredient ? <li key={i}>{`${measure} ${ingredient}`}</li> : null;
+                                    })}
+                                </ul>
+                                <h4 className="text-2xl font-bold mt-4">Instructions:</h4>
+                                <p className="text-lg">{randomRecipe.strInstructions}</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <p>Loading random recipe...</p>
+                    )}
                 </div>
             </section>
         </section>
