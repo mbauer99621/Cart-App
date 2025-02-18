@@ -11,17 +11,20 @@ import MyCart from './pages/MyCart.tsx';
 import MyFridge from './pages/MyFridge.tsx';
 import SavedRecipes from './pages/SavedRecipes.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
+import MyAccount from './pages/MyAccount.tsx';
 
+import { AuthProvider } from './context/AuthProvider.tsx';
 import { CartFridgeProvider } from './context/CartFridgeProvider.tsx';
-//import CartFridgeRoutes from './routes/CartFridgeRoutes.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
-    <CartFridgeProvider>
-      <App />
-    </CartFridgeProvider>
+    <AuthProvider>
+      <CartFridgeProvider>
+        <App />
+      </CartFridgeProvider>
+    </AuthProvider>
     ),
     errorElement: <ErrorPage />,
     children: [
@@ -48,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: '/signup',
         element: <SignUpPage />,
+      },
+      {
+        path: "/MyAccount", 
+        element: <MyAccount /> 
       },
     ],
   },
