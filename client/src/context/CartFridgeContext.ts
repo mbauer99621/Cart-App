@@ -11,6 +11,8 @@ export interface CartFridgeContextProps {
   removeFromCart: (id: number) => void;
   moveToFridge: (id: number) => void;
   removeFromFridge: (id: number) => void;
+  addToCart: (ingredients: string[]) => void;
+  notification: string | null;
 }
 
 // Create the Context (without default value)

@@ -5,9 +5,11 @@ export default function MyFridge() {
   const {fridgeItems, removeFromFridge} = useCartFridge();
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+    <div className="container">
+    <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">My Fridge</h1>
 
+    
       {fridgeItems.length === 0 ? (
         <p className="text-gray-600">Your fridge is empty.</p>
       ) : (
@@ -23,6 +25,7 @@ export default function MyFridge() {
           ))}
         </ul>
       )}
+    </div>
     </div>
   );
 }

@@ -85,7 +85,7 @@ export default function MyAccount() {
                 isEditingUsername ? "bg-white border-gray-400 text-black" : "bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             type="text"
-            value={username || "Guest"}
+            value={username}
             disabled={!isEditingUsername}
             onChange={(e) => setUserName(e.target.value)}
           />
