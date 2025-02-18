@@ -1,6 +1,7 @@
-import { DataTypes, type Sequelize, Model, type Optional, ForeignKey } from 'sequelize';
+import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin } from 'sequelize';
 
 import type { User } from './user.js'
+import { Ingredient } from './ingredient.js';
 
 interface FridgeAttributes {
     id: number;
@@ -18,6 +19,9 @@ export class Fridge
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
+
+    declare addIngredient: BelongsToManyAddAssociationMixin<Ingredient, Ingredient['id']>;
+    declare addIngredients: BelongsToManyAddAssociationMixin<Ingredient[], Ingredient['id'][]>;
 }
 
 export function FridgeFactory(sequelize: Sequelize): typeof Fridge {
