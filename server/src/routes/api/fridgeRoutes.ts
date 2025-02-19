@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Fridge } from '../../models/index.js';
+import { Fridge, Ingredient } from '../../models/index.js';
 const router = Router();
 
 // return fridge items for a given user
@@ -8,7 +8,22 @@ router.get('/', async (req, res) => {
 
     try {
         // get fridge for user
-        const fridge = await Fridge.findOne({ where: { userId } });
+        const fridge = await Fridge.findOne({ 
+            include: [
+                {
+                    model: Ingredient,
+                    attributes: [
+                        "id",
+                        "name"
+                    ],
+                    through: {
+                        attributes: [],
+                    },
+                },
+                
+            ],
+            where: { userId } 
+        });
         return res.status(200).json({ fridge });
 
     } catch (err) {
