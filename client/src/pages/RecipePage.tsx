@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Recipe } from "../interfaces/RecipeCard";
+import SaveRecipeButton from "./SaveRecipeButton";
 
 const RecipePage = () => {
     const { idMeal } = useParams<{ idMeal: string }>();
@@ -50,6 +51,12 @@ const RecipePage = () => {
                         Back
                     </button>
 
+                    {/* Save Recipe Button */}
+                    <div id = "saveButton">
+                        <SaveRecipeButton recipe={recipe} />
+                    </div>
+
+                     
 
                     {/* Top Section with Title, Image, and Ingredients */}
                     <div className="recipe-container flex flex-col md:flex-row mb-6">
@@ -75,12 +82,20 @@ const RecipePage = () => {
                     {/* Instructions Section Below */}
                     <div className="instructions-container">
                         <h3 className="text-2xl font-bold mb-4 mt-6">Instructions</h3>
-                        <ol>
+                        <ol> 
                             {splitInstructions(recipe.strInstructions).map((step, index) => (
                                 <li key={index}>{step}</li>
                             ))}
                         </ol>
                     </div>
+
+                    {/* Print Recipe Button */}
+                    <button
+                        onClick={() => window.print()}
+                        className="mt-6 px-4 py-2 bg-purple-500 text-white rounded"
+                    >
+                        Print Recipe
+                    </button>
 
                 </div>
             ) : (
