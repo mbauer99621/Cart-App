@@ -6,6 +6,7 @@ QuikCart is a responsive recipe website built with React, Vite, and Tailwind CSS
 ## Table of Contents
 - [Technologies Used](#technologies-used)
 - [Installation & Setup](#installation--setup)
+- [Usage](#usage)
 - [Future Improvements](#future-improvements)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
@@ -29,6 +30,14 @@ QuikCart is a responsive recipe website built with React, Vite, and Tailwind CSS
 3. **Run the Development Server**
    ```sh
    npm run start
+
+## Usage
+- In the home page, you are able to view categories of recipes. Click a category and it will take you to a list of every recipe in that category. Once you select a recipe, it will take to you that recipe's page. You are able to save recipes which will be put in to your saved recipes list.
+- In the My Recipes page, you are able to view recipes you have saved. You are able to add the ingredients from the recipe in to the card or you can delete it from your saved list.
+-In the My Fridge page, you are able to see what is in your fridge and delete the item.
+-In the My Cart page, you are able to see what is in your cart and delete the item or add it to your fridge.
+-In the My Account page, you can upload a profile photo and remove it, set a username, and set an email and password.
+-The login page will prompt you to log in to your account with a username and password.
 
 ## Future Improvements 
   
