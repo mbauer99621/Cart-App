@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Fridge, Ingredient } from '../../models/index.js';
+
 const router = Router();
 
 // create a fridge for a user (done upon creating user)

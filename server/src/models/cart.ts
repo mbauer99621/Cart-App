@@ -1,6 +1,7 @@
 import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin, BelongsToManyRemoveAssociationMixin } from 'sequelize';
 
-import type { User } from './user.js'
+//import type { User } from './user.js'
+import  User from './user.js'
 import { Ingredient } from './ingredient.js';
 
 interface CartAttributes {
@@ -36,6 +37,8 @@ export function CartFactory(sequelize: Sequelize): typeof Cart {
             }, 
             userId: {
                 type: DataTypes.INTEGER,
+                allowNull: false, 
+                references: { model: User, key: 'id'},
                 unique: true
             }
         },
@@ -45,7 +48,8 @@ export function CartFactory(sequelize: Sequelize): typeof Cart {
         }
     );
 
-    return Cart
+
+    return Cart;
 }
 
 export default Cart;
