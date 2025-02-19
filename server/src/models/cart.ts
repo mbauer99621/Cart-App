@@ -1,6 +1,7 @@
-import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin } from 'sequelize';
+import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin, BelongsToManyRemoveAssociationMixin } from 'sequelize';
 
-import type { User } from './user.js'
+//import type { User } from './user.js'
+import  User from './user.js'
 import { Ingredient } from './ingredient.js';
 
 interface CartAttributes {
@@ -22,6 +23,8 @@ export class Cart
 
     declare addIngredient: BelongsToManyAddAssociationMixin<Ingredient, Ingredient['id']>;
     declare addIngredients: BelongsToManyAddAssociationMixin<Ingredient[], Ingredient['id'][]>;
+
+    declare removeIngredient: BelongsToManyRemoveAssociationMixin<Ingredient, Ingredient['id']>;
 }
 
 export function CartFactory(sequelize: Sequelize): typeof Cart {
@@ -33,7 +36,10 @@ export function CartFactory(sequelize: Sequelize): typeof Cart {
                 primaryKey: true,
             }, 
             userId: {
-                type: DataTypes.INTEGER
+                type: DataTypes.INTEGER,
+                allowNull: false, 
+                references: { model: User, key: 'id'},
+                unique: true
             }
         },
         {
@@ -42,7 +48,8 @@ export function CartFactory(sequelize: Sequelize): typeof Cart {
         }
     );
 
-    return Cart
+
+    return Cart;
 }
 
 export default Cart;

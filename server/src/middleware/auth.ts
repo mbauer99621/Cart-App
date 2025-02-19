@@ -12,28 +12,33 @@ declare module 'express-serve-static-core' {
   }
 }
 
-export const authenticateToken:RequestHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authenticateToken:RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
-  if (authHeader) {
+  if (!authHeader) {
+    console.log('❌ No Authorization header provided');
+    res.status(401).json({ message: 'Access Denied: No token provided' });
+    return;
+  }
     const token = authHeader.split(' ')[1];
 
     const secretKey = process.env.JWT_SECRET_KEY || '';
+    if (!secretKey) {
+      console.error('❌ Missing JWT Secret Key in environment variables');
+      res.status(500).json({ message: 'Server Error: Missing JWT secret key' });
+      return;
+    }
 
     jwt.verify(token, secretKey, (err, decoded) => {
       if (err) {
+        console.error('❌ Invalid Token:', err.message);
         return res.sendStatus(403); // Forbidden
       }
 
       const userData = decoded as JwtPayload;
       req.user = { username: userData.username, email: userData.email }; // Ensure both fields exist
-      return next();
-    });
-  } else {
-    res.sendStatus(401); // Unauthorized
-  }
+      console.log('✅ Token Verified:', req.user);
+      next();
+      return;
+    }); 
 };

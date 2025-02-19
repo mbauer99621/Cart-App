@@ -3,6 +3,8 @@ import { DataTypes, Model, Sequelize, type Optional } from 'sequelize'
 interface IngredientAttributes {
     id: number;
     name: string;
+    quantity?: number;
+    unit?: string;
 }
 
 interface IngredientCreationAttributes extends Optional<IngredientAttributes, 'id'> {};
@@ -13,6 +15,8 @@ export class Ingredient
 {
     declare id: number;
     declare name: string;
+    declare quantity?: number;
+    declare unit?: string;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -28,7 +32,16 @@ export function IngredientFactory(sequelize: Sequelize): typeof Ingredient {
             },
             name: {
                 type: DataTypes.STRING,
+                unique: true,
                 allowNull: false
+            },
+            quantity: {
+                type: DataTypes.FLOAT,
+                allowNull: true
+            },
+            unit: {
+                type: DataTypes.STRING,
+                allowNull: true
             },
         },
         {
@@ -39,3 +52,5 @@ export function IngredientFactory(sequelize: Sequelize): typeof Ingredient {
 
     return Ingredient
 }
+
+export default Ingredient;
