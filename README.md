@@ -6,6 +6,8 @@ QuikCart is a responsive recipe website built with React, Vite, and Tailwind CSS
 - [Technologies Used](#technologies-used)
 - [Installation & Setup](#installation--setup)
 - [Future Improvements](#future-improvements)
+- [API](#api)
+- [Acknowledgments](#acknowledgments)
 - [License](#license)
 
 
@@ -34,6 +36,20 @@ QuikCart is a responsive recipe website built with React, Vite, and Tailwind CSS
 - User Allergies
 - Subscription based services and notifications
 - More polished UI
+
+
+## Acknowledgments
+
+-API from https://www.themealdb.com/
+
+- Logo Created by ChatGPT
+  
+- Orange X for delete buttons
+  https://www.freepik.com/free-vector/set-cross-marks-multiple-colours_50417991.htm#fromView=search&page=1&position=1&uuid=14b731df-cda1-419b-804b-7f5344e19ae8&query=set-cross-marks-multiple
+
+- Blackberry Jam Font
+   https://www.dafont.com/blackberry-jam.font 
+
 
 ## License 
   This project is licensed under the MIT License
