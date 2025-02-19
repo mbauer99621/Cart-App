@@ -8,23 +8,33 @@ export default function SavedRecipes() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const { addToCart, notification } = useCartFridge();
 
-  useEffect(() => {
-    fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=")
-      .then((res) => res.json())
-      .then((data) => setMeals(data.meals || []))
-      .catch((err) => console.error("Error fetching meals:", err));
-  }, []);
-
   // Load saved recipes from localStorage
-  //useEffect(() => {
-  //  const savedMeals = JSON.parse(localStorage.getItem("savedMeals") || "[]");
-  //  setMeals(savedMeals);
-  //}, []);
+  useEffect(() => {
+    const loadSavedRecipes = () => {
+        const savedMeals = JSON.parse(localStorage.getItem("savedRecipes") || "[]");
+        console.log("📥 Loaded saved recipes from localStorage:", savedMeals);
+        setMeals(savedMeals);
+    };
+
+    loadSavedRecipes();
+
+    // Listen for storage changes (if another tab updates localStorage)
+    window.addEventListener("storage", loadSavedRecipes);
+
+    return () => {
+        window.removeEventListener("storage", loadSavedRecipes);
+    };
+}, []);
 
   const removeMeal = (idMeal: string) => {
+    // remove the meal from component state
     const updatedMeals = meals.filter((meal) => meal.idMeal !== idMeal);
+
     setMeals(updatedMeals);
-    localStorage.setItem("savedMeals", JSON.stringify(updatedMeals));
+    // update localstorage for saved recipes
+    localStorage.setItem("savedRecipes", JSON.stringify(updatedMeals));
+
+    console.log(`❌ Removed recipe with ID: ${idMeal}`);
   };
 
   const extractIngredients = (meal: Meal): string[] => {
@@ -56,7 +66,7 @@ export default function SavedRecipes() {
                     </div>
                     <div className="flex space-x-2">
                       <AddIngredientsToCartButton ingredients={ingredients} onAdd={addToCart} />
-                      <RemoveButton id={parseInt(meal.idMeal)} onRemove={() => removeMeal(meal.idMeal)} /> {/* Add Remove Button */}
+                      <RemoveButton id={(meal.idMeal)} onRemove={() => removeMeal(meal.idMeal)} /> {/* Add Remove Button */}
                     </div>
                   </li>
                 );

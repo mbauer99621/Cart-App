@@ -18,8 +18,10 @@ export default function MyAccount() {
     const[isEditingUsername, setIsEditingUserName] = useState(false);
     const [isEditingEmail, setIsEditingEmail] = useState(false);
 
-    const[username, setUserName] = useState(user?.username || "Guest");
-    const [email, setEmail] = useState(user?.email || "example@email.com");
+    //const[username, setUserName] = useState(user?.username || "Guest");
+    const[username, setUserName] = useState(user?.username);
+    //const [email, setEmail] = useState(user?.email || "example@email.com");
+    const [email, setEmail] = useState(user?.email);
 
     useEffect(() => {
       if (user?.username) {

@@ -1,6 +1,6 @@
 interface RemoveButtonProps {
-    id: number;
-    onRemove: (id: number) => void;
+    id: string | number;
+    onRemove: (id: string | number) => void;
   }
   
   export default function RemoveButton({ id, onRemove }: RemoveButtonProps) {

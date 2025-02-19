@@ -20,7 +20,7 @@ export default function NavBar({ links }: NavBarProps) {
         />
         <h1 id = "h1-Title">
           <NavLink to="/" className="hover:text-gray-400">
-            TITLE
+            QuikCart
           </NavLink>
         </h1>
 
