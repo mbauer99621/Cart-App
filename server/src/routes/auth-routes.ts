@@ -21,6 +21,8 @@ router.post("/signup", async (req: Request, res: Response): Promise<Response | v
       return res.status(400).json({ success: false, message: "Email is already in use." });
     }
 
+    //might add hashing here
+
     // Create new user
     //await User.create({ username, email, password: hashedPassword });
     await User.create({ username, email, password });
@@ -38,9 +40,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   console.log("Login attempt for:", username);
 
 try {
-  const user = await User.findOne({
-    where: { username },
-  });
+  const user = await User.findOne({ where: { username } });
 
   if (!user) {
     console.error("User not found:", username);

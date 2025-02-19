@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, {JwtPayload as OriginalJwtPayload} from 'jsonwebtoken';
 
-interface JwtPayload {
+interface JwtPayload extends OriginalJwtPayload{
   username: string;
   email: string;
 }
@@ -22,7 +22,7 @@ export const authenticateToken:RequestHandler = (req: Request, res: Response, ne
   }
     const token = authHeader.split(' ')[1];
 
-    const secretKey = process.env.JWT_SECRET_KEY || '';
+    const secretKey = process.env.JWT_SECRET_KEY;
     if (!secretKey) {
       console.error('❌ Missing JWT Secret Key in environment variables');
       res.status(500).json({ message: 'Server Error: Missing JWT secret key' });

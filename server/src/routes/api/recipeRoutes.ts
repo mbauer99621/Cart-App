@@ -69,7 +69,7 @@ router.post('/save-recipe', authenticateToken, async (req, res) => {
     }
 });
 
-router.get('/saved-recipes/:userId', authenticateToken, async (req, res) => {
+router.get('/save-recipe/:userId', authenticateToken, async (req, res) => {
     try {
         const { userId } = req.params;
         console.log("🔍 Fetching saved recipes for user ID:", userId);
