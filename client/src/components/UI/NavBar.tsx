@@ -8,18 +8,20 @@ interface NavBarProps {
 // Creates the nav bar
 export default function NavBar({ links }: NavBarProps) {
   return (
-    <header className="bg-gray-900 text-white py-4 shadow-md">
-      <div className="container mx-auto flex items-center px-6">
-        
-        {/* Left Section: Logo & Title */}
-        <div className="flex items-center space-x-3">
-          <img id="logoImg" src={logo} alt="Logo" className="h-10 w-auto" />
-          <h1 id="h1-Title" className="text-xl font-bold">
-            <NavLink to="/" className="hover:text-gray-400 transition">
-              TITLE
-            </NavLink>
-          </h1>
-        </div>
+    <nav className="text-white py-4">
+      {/* <div className="container mx-auto flex justify-between items-center px-6"> */}
+      <div>
+        {/* Logo / Branding */}
+        <img 
+          id = "logoImg"
+          src = {logo}
+          alt="Logo"
+        />
+        <h1 id = "h1-Title">
+          <NavLink to="/" className="hover:text-gray-400">
+            QuikCart
+          </NavLink>
+        </h1>
 
         {/* Right Section: Navigation Links */}
         <nav className="ml-auto">

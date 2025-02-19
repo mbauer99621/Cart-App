@@ -44,7 +44,53 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
 
       if (ingredients.length === 0) {
         setNotification("⚠️ No ingredients found to add!");
+        setTimeout(() => setNotification(null), 3000);
         return;
+      }
+
+      // Convert fridge items to a set for lookups
+      const fridgeSet = new Set(fridgeItems.map((item) => item.name.toLowerCase()));
+      const cartSet = new Set(cartItems.map((item) => item.name.toLowerCase()));
+
+      // Separate ingredients already in fridge or cart
+      const alreadyInFridge = ingredients.filter((ingredient) =>
+        fridgeSet.has(ingredient.toLowerCase())
+      );
+
+      const alreadyInCart = ingredients.filter((ingredient) =>
+        cartSet.has(ingredient.toLowerCase())
+      );
+
+      // Filter out ingredients already in the fridge
+      const newIngredients = ingredients.filter(
+        (ingredient) => !fridgeSet.has(ingredient.toLowerCase()) && !cartSet.has(ingredient.toLowerCase())
+      );
+
+      // 🔹 **Notification for ingredients already in fridge
+      if (alreadyInFridge.length > 0 && alreadyInCart.length === 0 && newIngredients.length === 0) {
+        setNotification("✅ All ingredients are already in your fridge!");
+        setTimeout(() => setNotification(null), 3000);
+        return;
+      }
+
+      // 🔹 **Notification for ingredients already in cart
+      if (alreadyInCart.length > 0 && alreadyInFridge.length === 0 && newIngredients.length === 0) {
+        setNotification("🛒 All ingredients are already in your cart!");
+        setTimeout(() => setNotification(null), 3000);
+        return;
+      }
+
+      // 🔹 **Notification for a mix of both
+      if (alreadyInFridge.length > 0 && alreadyInCart.length > 0 && newIngredients.length === 0) {
+        setNotification("✅🛒 Some ingredients are in your fridge, and the rest are already in your cart!");
+        setTimeout(() => setNotification(null), 3000);
+        return; 
+      }
+
+      // 🔹 **Notification when only some items were in fridge/cart
+      if (newIngredients.length < ingredients.length) {
+        setNotification("⚠️Some ingredients were already in your fridge or cart and were not added.");
+        setTimeout(() => setNotification(null), 3000);
       }
 
       const newItems = ingredients.map((name, index) => ({
@@ -54,13 +100,14 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
   
       setCartItems((prev) => {
         const updatedCart = [...prev, ...newItems];
-        setNotification("✅ Ingredients successfully added to My Cart!");
-
+        
         localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+        setNotification("🛒 Ingredients successfully added to My Cart!");
+        setTimeout(() => setNotification(null), 3000);
+
         return updatedCart;
       });
-
-      setTimeout(() => setNotification(null), 3000);
     };
   
     return (

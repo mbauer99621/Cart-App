@@ -20,7 +20,7 @@ export default function MyFridge() {
               className="flex justify-between items-center border-b py-3 last:border-none"
             >
               <span className="text-lg text-gray-800">{item.name}</span>
-              <RemoveButton id={item.id} onRemove={removeFromFridge} />
+              <RemoveButton id={item.id} onRemove={() => removeFromFridge(item.id)} />
             </li>
           ))}
         </ul>
