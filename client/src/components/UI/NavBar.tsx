@@ -14,7 +14,7 @@ export default function NavBar({ links }: NavBarProps) {
         <div className="flex items-center space-x-3 pl-1 mr-6">
 
           <img id="logoImg" src={logo} alt="Logo" className="h-10 w-auto" /> 
-          <h1 id="h1-Title" className="text-xl font-bold text-black">
+          <h1 id="h1-Title" className="text-xl font-bold text-black font-[CustomFont]">
             <NavLink to="/">QuikCart</NavLink>
           </h1>
         </div>
