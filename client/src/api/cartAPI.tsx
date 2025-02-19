@@ -32,20 +32,16 @@ const makeCart = async (userId: number) => {
     }
 } 
 
-const retrieveCart = async (userId: number) => {
-    const body = {
-        userId: userId
-    }
+const retrieveCart = async (userId: number | null) => {
 
     try {
         const response = await fetch(
-            'api/cart/items',
+            `api/cart/items/${userId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${Auth.getToken()}`
                 },
-                body: JSON.stringify(body)
             },
         );
         const responseData = await response.json();
@@ -54,7 +50,7 @@ const retrieveCart = async (userId: number) => {
             throw new Error(response.statusText);
         }
 
-        return responseData.Ingredients
+        return responseData.cart.Ingredients
 
     } catch (err) {
         console.error('Error getting cart ingredients: ', err);
@@ -62,7 +58,7 @@ const retrieveCart = async (userId: number) => {
     }
 }
 
-const addToCart = async (name: string, userId: number) => {
+const addToCart = async (name: string, userId: number | null) => {
     const body = {
         name: name,
         userId: userId

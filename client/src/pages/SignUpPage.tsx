@@ -1,5 +1,7 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { signup } from "../api/signupAPI";
+// import { makeCart } from "../api/cartAPI.js";
+// import { makeFridge } from "../api/fridgeAPI.js";
 import { useNavigate, Link } from "react-router-dom";
 import FoodEmojis from '../components/UI/FoodEmojis';
 
@@ -29,6 +31,11 @@ const SignUpPage = () => {
       if (!response.success) {
         throw new Error(response.message);
       }
+      // make cart and fridge for user:
+      /*
+      await makeCart(userId);
+      await makeFridge(userId);
+      */
       navigate("/LoginPage"); // Redirect to login page after successful signup
     } catch (err) {
       setError("Signup failed. Please try again.");

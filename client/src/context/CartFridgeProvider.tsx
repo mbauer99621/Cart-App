@@ -1,5 +1,7 @@
-import { useState, ReactNode } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { CartFridgeContext } from "./CartFridgeContext";
+import { retrieveCart, addToCart as addToCartApi } from "../api/cartAPI.js";
+import auth from '../utils/auth.js'
 //import { AddIngredientsToCartButton } from "../components/AddIngredientsToCartButton";
 
 interface FoodItem {
@@ -7,6 +9,10 @@ interface FoodItem {
   name: string;
 }
 
+/*
+TODO add api calls to replace dummy data. (cartAPI/fridgeAPI)
+TODO add api update calls to remove, move, and add (cartAPI/fridgeAPI)
+*/
 export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
     const [cartItems, setCartItems] = useState<FoodItem[]>([
       { id: 1, name: "Tomatoes" },
@@ -22,6 +28,15 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
 
     const [notification, setNotification] = useState<string | null>(null);
   
+    useEffect (() => {
+      const retreiveData = async () => {
+        // console.log(auth.getProfile());
+        const data = await retrieveCart(auth.getProfile().id);
+        setCartItems(data  || cartItems);
+      }
+      retreiveData();
+    }, [])
+
     const removeFromCart = (id: number) => {
       setCartItems((prev) => prev.filter((item) => item.id !== id));
       localStorage.setItem("cart", JSON.stringify(cartItems.filter((item) => item.id !== id)));
@@ -39,7 +54,7 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
       setFridgeItems(fridgeItems.filter((item) => item.id !== id));
     };
 
-    const addToCart = (ingredients: string[]) => {
+    const addToCart = async (ingredients: string[]) => {
       console.log("🛒 Adding Ingredients to Cart:", ingredients);
 
       if (ingredients.length === 0) {
@@ -97,7 +112,11 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
         id: Date.now() + index,
         name,
       }));
-  
+      
+      for (const item of newItems) {
+        await addToCartApi(item.name, auth.getProfile().id);
+      }
+
       setCartItems((prev) => {
         const updatedCart = [...prev, ...newItems];
         

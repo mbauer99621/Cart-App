@@ -63,7 +63,7 @@ try {
     return res.status(500).json({ message: "Server error: Missing JWT secret key" });
   }
 
-  const token = jwt.sign({ username: user.username, email: user.email }, secretKey, { expiresIn: '12h' });
+  const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, secretKey, { expiresIn: '12h' });
   console.log("Login successful, token generated for:", username);
   return res.json({ token });
   
