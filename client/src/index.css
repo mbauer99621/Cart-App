@@ -184,9 +184,16 @@
 
 
   #home-section {
-    margin: 0 auto; /* Horizontally center the element */
-    width: 90%; /* Set the width to 90% of the parent container */
-    max-width: 100%; /* Optional: restrict the width on larger screens */
+    margin: 0 auto; 
+    width: 90%;
+    max-width: 100%; 
+    box-sizing: border-box; 
+}
 
-    box-sizing: border-box; /* Include padding in the element's width/height calculation */
+
+@font-face {
+  font-family: 'CustomFont'; 
+  src: url('./assets/customfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
