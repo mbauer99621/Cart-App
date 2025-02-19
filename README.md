@@ -1,4 +1,4 @@
-![Screenshot 2025-02-19 at 2 22 35 PM](https://github.com/user-attachments/assets/78290b7d-70ea-45af-ac44-518688b9de8a)
+# QuikCart
 
 ![MIT License](https://img.shields.io/badge/License-MIT-green.svg)
 
