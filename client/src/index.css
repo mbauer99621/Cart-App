@@ -17,6 +17,9 @@
     -webkit-text-size-adjust: 100%;
   }
   
+  * {
+     color: black;
+  }
 
   header {
     background-color: #d16b18;
@@ -24,12 +27,12 @@
   
   a {
     font-weight: 500;
-    color: #c0c1cf;
+    color: black;
     text-decoration: inherit;
   }
   
   a:hover {
-    color: #526dda;
+    color: gray;
   }
 
   .container {
@@ -66,7 +69,7 @@
     transition: border-color 0.25s;
   }
   button:hover {
-    border-color: #646cff;
+    border-color: gray;
   }
   button:focus,
   button:focus-visible {
@@ -88,8 +91,8 @@
       color: #213547;
       background-color: #ffffff;
     }
-    a:hover {
-      color: #747bff;
+    #rightNav a:hover {
+      color: gray;
     }
     button {
       background-color: #f9f9f9;
@@ -137,14 +140,6 @@
     width: 150px;
     margin-left: 0px;
   }
-
-  #h1-Title {
-    font-size: 1.5rem; 
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    margin-bottom: 1rem; 
-  }
   
   @media (min-width: 768px) {
     #h1-Title {
@@ -175,7 +170,6 @@
   #recipe-categories-container {
     display: flex;
     justify-content: center;
-    padding: 30px;
     width: 100%;
   }
   
@@ -193,6 +187,6 @@
     margin: 0 auto; /* Horizontally center the element */
     width: 90%; /* Set the width to 90% of the parent container */
     max-width: 100%; /* Optional: restrict the width on larger screens */
-    padding: 100px; /* Add padding around the content */
+
     box-sizing: border-box; /* Include padding in the element's width/height calculation */
 }

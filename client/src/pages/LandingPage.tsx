@@ -52,20 +52,21 @@ const Home = () => {
             <section id="recipe-categories-section">
                 <div id="recipe-categories-container">
                     <div id="recipe-categories-wrapper">
-                        <div id="recipe-categories" className="flex flex-wrap justify-center gap-6">
+                    <div id="recipe-categories" className="flex flex-wrap justify-center gap-6 w-full">
+
                             {categories.length > 0 ? (
                                 categories.map((category) => (
                                     <Link
-                                        key={category.idCategory}
-                                        to={`/category/${category.strCategory}`}
-                                        className="flex flex-col items-center justify-center p-4"
-                                    >
-                                        <h3 className="text-center">{category.strCategory}</h3>
-                                        <img
-                                            src={category.strCategoryThumb}
-                                            alt={category.strCategory}
-                                            className="w-24 h-24 object-cover"
-                                        />
+                                    key={category.idCategory}
+                                    to={`/category/${category.strCategory}`}
+                                    className="flex flex-col items-center justify-center p-4 transition-transform duration-200 hover:scale-110"
+                                >
+                                    <h3 className="text-center font-bold text-lg">{category.strCategory}</h3>
+                                    <img
+                                        src={category.strCategoryThumb}
+                                        alt={category.strCategory}
+                                        className="w-24 h-24 object-cover rounded-md"
+                                    />
                                     </Link>
                                 ))
                             ) : (
