@@ -6,7 +6,6 @@ QuikCart is a responsive recipe website built with React, Vite, and Tailwind CSS
 - [Technologies Used](#technologies-used)
 - [Installation & Setup](#installation--setup)
 - [Future Improvements](#future-improvements)
-- [API](#api)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
 
