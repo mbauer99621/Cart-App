@@ -51,7 +51,8 @@ const Home = () => {
             <section id="recipe-categories-section">
                 <div id="recipe-categories-container">
                     <div id="recipe-categories-wrapper">
-                        <div id="recipe-categories" className="flex flex-wrap justify-center gap-6">
+                    <div id="recipe-categories" className="flex flex-wrap justify-center gap-6 w-full">
+
                             {categories.length > 0 ? (
                                 categories.map((category) => (
                                     <Link
