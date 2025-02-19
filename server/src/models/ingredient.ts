@@ -32,6 +32,7 @@ export function IngredientFactory(sequelize: Sequelize): typeof Ingredient {
             },
             name: {
                 type: DataTypes.STRING,
+                unique: true,
                 allowNull: false
             },
             quantity: {

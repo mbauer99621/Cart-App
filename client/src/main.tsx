@@ -12,6 +12,8 @@ import MyFridge from './pages/MyFridge.tsx';
 import SavedRecipes from './pages/SavedRecipes.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
 import MyAccount from './pages/MyAccount.tsx';
+import CategoryRecipes from './components/CategoryRecipes.tsx';
+
 
 import { AuthProvider } from './context/AuthProvider.tsx';
 import { CartFridgeProvider } from './context/CartFridgeProvider.tsx';
@@ -56,6 +58,11 @@ const router = createBrowserRouter([
         path: "/MyAccount", 
         element: <MyAccount /> 
       },
+      {
+        path: '/category/:categoryName',
+        element: <CategoryRecipes />,
+      },
+      
     ],
   },
 ]);

@@ -1,17 +1,52 @@
 import { Router } from 'express';
-import { Fridge } from '../../models/index.js';
-import { FridgeIngredients, Ingredient } from '../../models/index.js';
+import { Fridge, FridgeIngredients, Ingredient } from '../../models/index.js';
 import { authenticateToken } from '../../middleware/auth.js';
 
 const router = Router();
 
+// create a fridge for a user (done upon creating user)
+router.post('/', async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const fridge = await Fridge.create({ userId });
+        return res.status(200).json({ fridge });
+    } catch (err) {
+        if (err instanceof Error && err.name === "SequelizeForeignKeyConstraintError") {
+            return res.status(403).json({ message: "Invalid userId." })
+        }
+
+        if (err instanceof Error && err.name === 'SequelizeUniqueConstraintError') {
+            return res.status(403).json({ message: "Fridge already exists for user." })
+        }
+
+        console.error("Error creating fridge: ", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 // return fridge items for a given user
-router.get('/', async (req, res) => {
+router.get('/items', async (req, res) => {
     const { userId } = req.body;
 
     try {
         // get fridge for user
-        const fridge = await Fridge.findOne({ where: { userId } });
+        const fridge = await Fridge.findOne({ 
+            include: [
+                {
+                    model: Ingredient,
+                    attributes: [
+                        "id",
+                        "name"
+                    ],
+                    through: {
+                        attributes: [],
+                    },
+                },
+                
+            ],
+            where: { userId } 
+        });
         return res.status(200).json({ fridge });
 
     } catch (err) {
@@ -20,64 +55,46 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/add-ingredient', authenticateToken, async (req, res) => {
+// add item to fridge.
+router.post('/item', async (req, res) =>{
+    const { name, userId } = req.body;
+
     try {
-        const { fridgeId, ingredientId, quantity } = req.body;
-
-        if (!fridgeId || !ingredientId || !quantity) {
-            return res.status(400).json({ message: 'All fields are required.' });
+        const ingredient = await Ingredient.findOne({ where: { name } });
+        const fridge = await Fridge.findOne({ where: { userId } });
+        
+        if (ingredient && fridge) {
+            fridge.addIngredient(ingredient);
+            return res.status(200).json({ ingredient });
+        } else {
+            return res.status(400).json({ message: "Could not find ingredient and/or cart." });
         }
 
-        // Check if the ingredient is already in the fridge
-        const existingEntry = await FridgeIngredients.findOne({ where: { fridgeId, ingredientId } });
-        if (existingEntry) {
-            // If ingredient exists, update quantity
-            existingEntry.quantity += quantity;
-            await existingEntry.save();
-            return res.status(200).json({ message: 'Ingredient quantity updated.' });
-        }
-
-        // Otherwise, create a new entry
-        await FridgeIngredients.create({ fridgeId, ingredientId, quantity });
-
-        return res.status(201).json({ message: 'Ingredient added to fridge.' });
-    } catch (error) {
-        console.error('Error adding ingredient:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
+    } catch (err) {
+        console.error("Error adding to cart: ", err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
-router.get('/fridge/:fridgeId', authenticateToken, async (req, res) => {
+// delete item from fridge
+router.delete('/item', async (req, res) => {
+    const { name, userId } = req.body;
+
     try {
-        const { fridgeId } = req.params;
-
-        const fridgeContents = await FridgeIngredients.findAll({
-            where: { fridgeId },
-            include: [{ model: Ingredient }],
-        });
-
-        return res.status(200).json(fridgeContents);
-    } catch (error) {
-        console.error('Error fetching fridge contents:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
-    }
-});
-
-router.delete('/remove-ingredient', authenticateToken, async (req, res) => {
-    try {
-        const { fridgeId, ingredientId } = req.body;
-
-        if (!fridgeId || !ingredientId) {
-            return res.status(400).json({ message: 'Fridge ID and Ingredient ID are required.' });
+        const ingredient = await Ingredient.findOne({ where: { name } });
+        const fridge = await Fridge.findOne({ where: { userId } });
+        
+        if (ingredient && fridge) {
+            fridge.removeIngredient(ingredient);
+            return res.status(200).json({ ingredient });
+        } else {
+            return res.status(400).json({ message: "Could not delete ingredient from cart." });
         }
 
-        await FridgeIngredients.destroy({ where: { fridgeId, ingredientId } });
-
-        return res.status(200).json({ message: 'Ingredient removed from fridge.' });
-    } catch (error) {
-        console.error('Error removing ingredient:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
+    } catch (err) {
+        console.error("Error deleting from cart: ", err);
+        return res.status(500).json({ message: "Internal server error" });
     }
-});
+})
 
 export default router;

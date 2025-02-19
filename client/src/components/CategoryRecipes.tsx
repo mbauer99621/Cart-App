@@ -1,51 +1,50 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-interface Meal {
+interface Recipe {
     idMeal: string;
     strMeal: string;
     strMealThumb: string;
 }
 
 const CategoryRecipes = () => {
-    const { categoryName } = useParams();
-    const [recipes, setRecipes] = useState<Meal[]>([]);
+    const { categoryName } = useParams<{ categoryName: string }>();
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
 
     useEffect(() => {
-        if (categoryName) {
-            fetchCategoryRecipes(categoryName);
-        }
+        fetchRecipes();
     }, [categoryName]);
 
-    const fetchCategoryRecipes = async (categoryName: string) => {
+    const fetchRecipes = async () => {
         try {
-            const response = await fetch(
-                `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`
-            );
+            const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`);
             const data = await response.json();
-
             if (data.meals) {
                 setRecipes(data.meals);
             }
         } catch (error) {
-            console.error("Error fetching category recipes:", error);
+            console.error("Error fetching recipes:", error);
         }
     };
 
     return (
-        <section>
-            <h1 className="text-center text-5xl font-bold my-6">Recipes in {categoryName}</h1>
-            <div className="recipe-list">
+        <section className="text-center p-6">
+            <h2 className="text-3xl font-bold mb-6">{categoryName} Recipes</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {recipes.length > 0 ? (
                     recipes.map((recipe) => (
-                        <div key={recipe.idMeal} className="recipe-card">
-                            <h3>{recipe.strMeal}</h3>
-                            <img src={recipe.strMealThumb} alt={recipe.strMeal} />
-                        </div>
+                        <Link
+                            key={recipe.idMeal}
+                            to={`/recipe/${recipe.idMeal}`}
+                            className="flex flex-col items-center p-4 shadow-md rounded-lg transition-transform duration-200 hover:scale-105"
+                        >
+                            <img src={recipe.strMealThumb} alt={recipe.strMeal} className="w-32 h-32 object-cover rounded-md" />
+                            <h3 className="mt-2 text-lg font-semibold">{recipe.strMeal}</h3>
+                        </Link>
                     ))
                 ) : (
-                    <p>No recipes found for this category.</p>
+                    <p>Loading recipes...</p>
                 )}
             </div>
         </section>
