@@ -5,7 +5,7 @@ interface SaveRecipeButtonProps {
   }
   
   export default function SaveRecipeButton({ recipe }: SaveRecipeButtonProps) {
-    const handleSaveRecipe = () => {
+    const handleSaveRecipe = async () => {
       if (!recipe) return;
   
       // Retrieve existing saved recipes from localStorage

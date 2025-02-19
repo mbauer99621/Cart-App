@@ -3,37 +3,40 @@ import { Meal } from "../interfaces/Meals";
 import { useCartFridge } from "../hooks/useCartFridge";
 import AddIngredientsToCartButton from "../components/AddIngredientsToCartButton";
 import RemoveButton from "../components/RemoveFromButton";
+import { fetchSavedRecipes } from "../api/recipeAPI";
 
 export default function SavedRecipes() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const { addToCart, notification } = useCartFridge();
+  const [error, setError] = useState<string | null>(null);
 
-  // Load saved recipes from localStorage
   useEffect(() => {
-    const loadSavedRecipes = () => {
-        const savedMeals = JSON.parse(localStorage.getItem("savedRecipes") || "[]");
-        console.log("📥 Loaded saved recipes from localStorage:", savedMeals);
+    const loadSavedRecipes = async () => {
+      setError(null);
+
+      try {
+        const userId = 1; // Replace with dynamic user ID if available
+        const savedMeals: Meal[] = await fetchSavedRecipes(userId);
+
+        if (!savedMeals || savedMeals.length === 0) {
+          throw new Error("Failed to load saved recipes.");
+        }
+
         setMeals(savedMeals);
+      } catch (err) {
+        console.error("❌ Error loading saved recipes:", err);
+        setError("Failed to load saved recipes. Please try again.");
+      }
     };
 
     loadSavedRecipes();
+  }, []);
 
-    // Listen for storage changes (if another tab updates localStorage)
-    window.addEventListener("storage", loadSavedRecipes);
-
-    return () => {
-        window.removeEventListener("storage", loadSavedRecipes);
-    };
-}, []);
 
   const removeMeal = (idMeal: string) => {
     // remove the meal from component state
     const updatedMeals = meals.filter((meal) => meal.idMeal !== idMeal);
-
     setMeals(updatedMeals);
-    // update localstorage for saved recipes
-    localStorage.setItem("savedRecipes", JSON.stringify(updatedMeals));
-
     console.log(`❌ Removed recipe with ID: ${idMeal}`);
   };
 
@@ -55,6 +58,7 @@ export default function SavedRecipes() {
         <h1 className="text-white text-4xl font-bold mb-6">Saved Recipes</h1>
         <div className="flex justify-center w-full">
           <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
             <ul className="space-y-4">
               {meals.map((meal) => {
                 const ingredients = extractIngredients(meal);

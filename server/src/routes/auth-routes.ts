@@ -57,14 +57,17 @@ try {
     return res.status(401).json({ message: 'Authentication failed: Invalid password' });
   }
 
-  const secretKey = process.env.JWT_SECRET_KEY || '';
+  const secretKey = process.env.JWT_SECRET_KEY;
   if (!secretKey) {
     console.error("JWT secret key is missing");
     return res.status(500).json({ message: "Server error: Missing JWT secret key" });
   }
 
   const token = jwt.sign({ username: user.username, email: user.email }, secretKey, { expiresIn: '12h' });
+
   console.log("Login successful, token generated for:", username);
+  //return res.json({ token });
+
   return res.json({ token });
   
 } catch (error) {

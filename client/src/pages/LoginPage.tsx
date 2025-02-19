@@ -1,25 +1,24 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
-import Auth from '../utils/auth';
-import { login } from '../api/authAPI';
-import type { UserLogin } from '../interfaces/UserLogin';
+//import Auth from '../utils/auth';
+//import { login } from '../api/authAPI';
+//import type { UserLogin } from '../interfaces/UserLogin';
+import { login } from "../api/loginAPI";
 import FoodEmojis from '../components/UI/FoodEmojis';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const Login = () => {
-  const [loginData, setLoginData] = useState<UserLogin>({
-    username: '',
-    password: '',
+const LoginPage = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
   });
 
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setLoginData({
-      ...loginData,
-      [name]: value,
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -27,17 +26,22 @@ const Login = () => {
     e.preventDefault();
     setError(null);
 
-    try {
-        const data = await login(loginData);
-        if (!data.token) {
-          throw new Error('Invalid credentials, please try again');
-        }
-        Auth.login(data.token);
-      } catch (err) {
-        setError('Login failed. Please check your credentials.');
-        console.error('Failed to login', err);
-      }
-    };
+    const response = await login(formData);
+
+    if (!response.success || !response.token) {
+      console.error("❌ Login failed:", response.message);
+      setError(response.message || "Invalid credentials. Please try again.");
+      return;
+    }
+
+    // ✅ Store the JWT token in sessionStorage
+    sessionStorage.setItem("token", response.token);
+    sessionStorage.setItem("username", formData.username);
+    console.log("✅ Token stored in sessionStorage:", response.token);
+
+    // ✅ Redirect to the main app or dashboard
+    navigate("/");
+  };
 
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-gray-100 relative overflow-hidden">
@@ -60,8 +64,9 @@ const Login = () => {
                 type="text"
                 name="username"
                 placeholder="Enter your username"
-                value={loginData.username || ''}
+                value={formData.username || ''}
                 onChange={handleChange}
+                required
               />
             </div>
     
@@ -73,8 +78,9 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="Enter your password"
-                value={loginData.password || ''}
+                value={formData.password || ''}
                 onChange={handleChange}
+                required
               />
             </div>
     
@@ -101,4 +107,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginPage;

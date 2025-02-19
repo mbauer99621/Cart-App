@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserRecipes, Recipe } from '../../models/index.js';
+import { User, UserRecipes, Recipe } from '../../models/index.js';
 import { authenticateToken } from '../../middleware/auth.js';
 
 const router = Router();
@@ -73,12 +73,17 @@ router.get('/saved-recipes/:userId', authenticateToken, async (req, res) => {
     try {
         const { userId } = req.params;
 
-        const savedRecipes = await UserRecipes.findAll({
-            where: { userId },
-            include: [{ model: Recipe }],
+        const savedRecipes = await User.findOne({
+            where: { id: userId },
+            include: Recipe,
         });
 
-        return res.status(200).json(savedRecipes);
+        if (!savedRecipes) {
+            return res.status(404).json({ message: "No saved recipes found for this user." });
+        }
+
+        console.log("✅ Saved recipes found:", savedRecipes);
+        return res.json({ meals: savedRecipes.Recipes || [] });
     } catch (error) {
         console.error('Error fetching saved recipes:', error);
         return res.status(500).json({ message: 'Internal server error.' });
