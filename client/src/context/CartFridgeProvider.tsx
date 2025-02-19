@@ -1,6 +1,7 @@
 import { useEffect, useState, ReactNode } from "react";
 import { CartFridgeContext } from "./CartFridgeContext";
 import { retrieveCart, addToCart as addToCartApi } from "../api/cartAPI.js";
+import { addIngredient } from "../api/ingredientAPI.js";
 import auth from '../utils/auth.js'
 //import { AddIngredientsToCartButton } from "../components/AddIngredientsToCartButton";
 
@@ -114,6 +115,7 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
       }));
       
       for (const item of newItems) {
+        await addIngredient(item.name);
         await addToCartApi(item.name, auth.getProfile().id);
       }
 
