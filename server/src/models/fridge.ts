@@ -1,6 +1,7 @@
 import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin } from 'sequelize';
 
-import type { User } from './user.js'
+//import type { User } from './user.js'
+import User from './user.js'
 import { Ingredient } from './ingredient.js';
 
 interface FridgeAttributes {
@@ -33,7 +34,9 @@ export function FridgeFactory(sequelize: Sequelize): typeof Fridge {
                 primaryKey: true,
             }, 
             userId: {
-                type: DataTypes.INTEGER
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: { model: User, key: 'id'}
             }
         },
         {
@@ -42,7 +45,8 @@ export function FridgeFactory(sequelize: Sequelize): typeof Fridge {
         }
     );
 
-    return Fridge
+
+    return Fridge;
 }
 
 export default Fridge;
