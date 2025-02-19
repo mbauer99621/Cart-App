@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         //const userData = { username: decoded.username, email: decoded.email };
   
         // Send request with Authorization token
-        fetch(`http://localhost:3001/api/get-user/${decoded.username}`, {
+        fetch(`/api/get-user/${decoded.username}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     AuthService.login(token);
     const decoded = jwtDecode<{ username: string; email: string }>(token);
 
-    fetch(`http://localhost:3001/api/get-user/${decoded.username}`, {
+    fetch(`/api/get-user/${decoded.username}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

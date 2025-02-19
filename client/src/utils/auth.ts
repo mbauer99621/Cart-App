@@ -37,11 +37,12 @@ class AuthService {
   }
 
   getToken(): string {
-    return this.token || '';
+    return this.token || localStorage.getItem("id_token") || "";
   }
 
   login(idToken: string) {
     this.token = idToken; // Store in memory instead of localStorage
+    localStorage.setItem("id_token", idToken);
     window.location.assign('/');
   }
 
