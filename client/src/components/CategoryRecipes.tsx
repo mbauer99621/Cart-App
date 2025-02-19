@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 interface Recipe {
@@ -11,6 +11,7 @@ interface Recipe {
 const CategoryRecipes = () => {
     const { categoryName } = useParams<{ categoryName: string }>();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const navigate = useNavigate(); // Hook for navigation
 
     useEffect(() => {
         fetchRecipes();
@@ -30,8 +31,21 @@ const CategoryRecipes = () => {
 
     return (
         <section className="text-center p-6">
-            <h2 className="text-3xl font-bold mb-6">{categoryName} Recipes</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* Container for Back Button and Title */}
+            <div className="flex items-center justify-center mb-6 relative">
+                {/* Back Button on the left */}
+                <button
+                    onClick={() => navigate(-1)} // Go back to the previous page
+                    className="px-4 py-2 bg-blue-500 text-white rounded-l-lg absolute left-0"
+                >
+                    Back
+                </button>
+
+                {/* Title */}
+                <h2 className="text-3xl font-bold">{categoryName} Recipes</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
                 {recipes.length > 0 ? (
                     recipes.map((recipe) => (
                         <Link

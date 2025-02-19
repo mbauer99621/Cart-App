@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Recipe } from "../interfaces/RecipeCard";
 
 const RecipePage = () => {
     const { idMeal } = useParams<{ idMeal: string }>();
+    const navigate = useNavigate(); // hook for navigation
     const [recipe, setRecipe] = useState<Recipe | null>(null);
 
     useEffect(() => {
@@ -25,10 +26,31 @@ const RecipePage = () => {
         }
     }, [idMeal]);
 
+    // Function to split instructions by sentence
+    const splitInstructions = (instructions: string) => {
+        return instructions.split(/(?<=[.!?])\s+/).filter(Boolean);
+    };
+
     return (
         <section>
             {recipe ? (
                 <div>
+                    {/* Back to Home Page Button */}
+                    <button
+                        onClick={() => navigate("/")} // Navigates to home page
+                        className="mt-6 px-4 py-2 bg-green-500 text-white rounded"
+                    >
+                        Home
+                    </button>
+                    {/* Back to Category Button */}
+                    <button
+                        onClick={() => navigate(-1)} // Go back to the previous page
+                        className="mb-4 ml-6 px-4 py-2 bg-blue-500 text-white rounded"
+                    >
+                        Back
+                    </button>
+
+
                     {/* Top Section with Title, Image, and Ingredients */}
                     <div className="recipe-container flex flex-col md:flex-row mb-6">
                         <div className="image-container flex-shrink-0 mb-6 md:mb-0">
@@ -53,8 +75,13 @@ const RecipePage = () => {
                     {/* Instructions Section Below */}
                     <div className="instructions-container">
                         <h3 className="text-2xl font-bold mb-4 mt-6">Instructions</h3>
-                        <p>{recipe.strInstructions}</p>
+                        <ol>
+                            {splitInstructions(recipe.strInstructions).map((step, index) => (
+                                <li key={index}>{step}</li>
+                            ))}
+                        </ol>
                     </div>
+
                 </div>
             ) : (
                 <p>Loading recipe...</p>
