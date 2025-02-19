@@ -85,19 +85,7 @@
     inset: auto 0 0 0;
     padding: 1em;
   }
-  
-  @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
-    }
-    #rightNav a:hover {
-      color: gray;
-    }
-    button {
-      background-color: #ffffff;
-    }
-}
+
 
 .error-message {
     color: red;
