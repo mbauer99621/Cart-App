@@ -186,3 +186,18 @@
   font-weight: normal;
   font-style: normal;
 }
+
+
+
+.recipe-image {
+  width: 100%; 
+  max-width: 500px; 
+  height: auto; 
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .recipe-image {
+      max-width: 200px; /* Smaller max-width for mobile screens */
+  }
+}

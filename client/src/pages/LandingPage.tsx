@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Recipe } from "../interfaces/RecipeCard.js";
-import SaveRecipeButton from "./SaveRecipeButton.js";
+import { Recipe } from "../interfaces/RecipeCard";
+import SaveRecipeButton from "./SaveRecipeButton";
 
 interface Category {
     idCategory: string;
@@ -52,21 +52,20 @@ const Home = () => {
             <section id="recipe-categories-section">
                 <div id="recipe-categories-container">
                     <div id="recipe-categories-wrapper">
-                    <div id="recipe-categories" className="flex flex-wrap justify-center gap-6 w-full">
-
+                        <div id="recipe-categories" className="flex flex-wrap justify-center gap-6 w-full">
                             {categories.length > 0 ? (
                                 categories.map((category) => (
                                     <Link
-                                    key={category.idCategory}
-                                    to={`/category/${category.strCategory}`}
-                                    className="flex flex-col items-center justify-center p-4 transition-transform duration-200 hover:scale-110"
-                                >
-                                    <h3 className="text-center font-bold text-lg">{category.strCategory}</h3>
-                                    <img
-                                        src={category.strCategoryThumb}
-                                        alt={category.strCategory}
-                                        className="w-24 h-24 object-cover rounded-md"
-                                    />
+                                        key={category.idCategory}
+                                        to={`/category/${category.strCategory}`}
+                                        className="flex flex-col items-center justify-center p-4 transition-transform duration-200 hover:scale-110"
+                                    >
+                                        <h3 className="text-center font-bold text-lg">{category.strCategory}</h3>
+                                        <img
+                                            src={category.strCategoryThumb}
+                                            alt={category.strCategory}
+                                            className="w-24 h-24 object-cover rounded-md"
+                                        />
                                     </Link>
                                 ))
                             ) : (
@@ -79,7 +78,7 @@ const Home = () => {
 
             {/* Random Recipe Section */}
             <section className="flex justify-center items-center w-full min-h-screen py-6">
-                <div className="flex flex-col md:flex-row items-center md:items-start w-full max-w-screen-xl p-6  rounded-lg">
+                <div className="flex flex-col md:flex-row items-center md:items-start w-full max-w-screen-xl p-6 rounded-lg">
                     {randomRecipe ? (
                         <div className="flex flex-col md:flex-row items-center md:items-start w-full">
                             {/* Recipe Image (Left) */}
