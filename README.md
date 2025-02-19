@@ -34,6 +34,10 @@ Link to Deployed Application:
    npm run start
 
 ## Usage
+
+![Screenshot 2025-02-19 at 2 14 48 PM](https://github.com/user-attachments/assets/7906763e-39e2-4286-87f6-4062a7ae4253)
+
+
 - In the home page, you are able to view categories of recipes. Click a category and it will take you to a list of every recipe in that category. Once you select a recipe, it will take to you that recipe's page. You are able to save recipes which will be put in to your saved recipes list.
 - In the My Recipes page, you are able to view recipes you have saved. You are able to add the ingredients from the recipe in to the card or you can delete it from your saved list.
 - In the My Fridge page, you are able to see what is in your fridge and delete the item.
