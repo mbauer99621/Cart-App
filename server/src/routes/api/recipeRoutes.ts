@@ -72,21 +72,27 @@ router.post('/save-recipe', authenticateToken, async (req, res) => {
 router.get('/saved-recipes/:userId', authenticateToken, async (req, res) => {
     try {
         const { userId } = req.params;
+        console.log("🔍 Fetching saved recipes for user ID:", userId);
 
-        const savedRecipes = await User.findOne({
+        const userWithRecipes = await User.findOne({
             where: { id: userId },
-            include: Recipe,
+            include: {
+                model: Recipe,
+                attributes: ['id', 'name', 'instructions', 'category'],
+                through: { attributes: [] } // Prevents UserRecipes join table data from being included
+            },
         });
 
-        if (!savedRecipes) {
+        if (!userWithRecipes || !userWithRecipes.Recipes) {
             return res.status(404).json({ message: "No saved recipes found for this user." });
         }
 
-        console.log("✅ Saved recipes found:", savedRecipes);
-        return res.json({ meals: savedRecipes.Recipes || [] });
-    } catch (error) {
-        console.error('Error fetching saved recipes:', error);
-        return res.status(500).json({ message: 'Internal server error.' });
+
+        console.log("✅ Saved recipes found:", userWithRecipes.Recipes);
+        return res.json({ meals: userWithRecipes.Recipes });
+    } catch (err) {
+        console.error("❌ Error fetching saved recipes:", err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 });
 
