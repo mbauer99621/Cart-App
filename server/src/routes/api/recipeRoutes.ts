@@ -84,11 +84,12 @@ router.get('/saved-recipes/:userId', authenticateToken, async (req, res) => {
         });
 
         if (!userWithRecipes || !userWithRecipes.Recipes) {
+            console.log("⚠️ No saved recipes found for this user.");
             return res.status(404).json({ message: "No saved recipes found for this user." });
         }
 
 
-        console.log("✅ Saved recipes found:", userWithRecipes.Recipes);
+        console.log("✅ Saved recipes found:", JSON.stringify(userWithRecipes.Recipes, null, 2));
         return res.json({ meals: userWithRecipes.Recipes });
     } catch (err) {
         console.error("❌ Error fetching saved recipes:", err);

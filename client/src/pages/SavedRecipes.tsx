@@ -15,7 +15,9 @@ export default function SavedRecipes() {
       setError(null);
 
       try {
-        const userId = 1; // Replace with dynamic user ID if available
+        //const userId = 1; // Replace with dynamic user ID if available
+        const storedUser = JSON.parse(sessionStorage.getItem("user") || "null");
+        const userId = storedUser.id;
         const savedMeals: Meal[] = await fetchSavedRecipes(userId);
 
         if (!savedMeals || savedMeals.length === 0) {

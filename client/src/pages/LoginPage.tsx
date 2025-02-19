@@ -2,7 +2,7 @@ import { useState, type FormEvent, type ChangeEvent } from 'react';
 //import Auth from '../utils/auth';
 //import { login } from '../api/authAPI';
 //import type { UserLogin } from '../interfaces/UserLogin';
-import { login } from "../api/loginAPI";
+import { login, LoginResponse } from "../api/loginAPI";
 import FoodEmojis from '../components/UI/FoodEmojis';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -26,9 +26,9 @@ const LoginPage = () => {
     e.preventDefault();
     setError(null);
 
-    const response = await login(formData);
+    const response: LoginResponse = await login(formData);
 
-    if (!response.success || !response.token) {
+    if (!response.success || !response.token || !response.user) {
       console.error("❌ Login failed:", response.message);
       setError(response.message || "Invalid credentials. Please try again.");
       return;
@@ -36,8 +36,10 @@ const LoginPage = () => {
 
     // ✅ Store the JWT token in sessionStorage
     sessionStorage.setItem("token", response.token);
-    sessionStorage.setItem("username", formData.username);
-    console.log("✅ Token stored in sessionStorage:", response.token);
+    sessionStorage.setItem("userId", response.user.id?.toString() || ""); // Convert ID to string for storage
+    sessionStorage.setItem("username", response.user.username || "");
+    sessionStorage.setItem("email", response.user.email || "");
+    console.log("✅ User data stored in sessionStorage:", response.user);
 
     // ✅ Redirect to the main app or dashboard
     navigate("/");
