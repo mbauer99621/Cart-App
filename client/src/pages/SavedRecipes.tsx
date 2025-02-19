@@ -56,7 +56,7 @@ export default function SavedRecipes() {
 
   return (
     <div className="container-saved-recipe">
-      <div className="flex flex-col items-center min-h-screen bg-gray-900 p-6">
+      <div className="flex flex-col items-center min-h-screen p-6">
         <h1 className="text-white text-4xl font-bold mb-6">Saved Recipes</h1>
         <div className="flex justify-center w-full">
           <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl">

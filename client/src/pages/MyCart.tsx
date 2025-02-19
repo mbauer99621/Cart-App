@@ -21,7 +21,7 @@ export default function MyCart() {
               className="flex justify-between items-center border-b py-3 last:border-none"
             >
               <span className="text-lg text-gray-800">{item.name}</span>
-              <div className="space-x-2">
+              <div className="flex items-center space-x-2"> {/* Ensure buttons are aligned */}
                 <AddToFridgeButton id={item.id} onAdd={moveToFridge} />
                 <RemoveButton id={item.id} onRemove={() => removeFromCart(item.id)} />
               </div>
