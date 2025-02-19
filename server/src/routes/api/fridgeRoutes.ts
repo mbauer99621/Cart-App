@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import { Fridge, FridgeIngredients, Ingredient } from '../../models/index.js';
-import { authenticateToken } from '../../middleware/auth.js';
+import { Fridge, Ingredient } from '../../models/index.js';
 
 const router = Router();
 
