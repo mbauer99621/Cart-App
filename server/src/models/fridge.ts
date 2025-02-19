@@ -1,4 +1,4 @@
-import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin } from 'sequelize';
+import { DataTypes, type Sequelize, Model, type Optional, ForeignKey, BelongsToManyAddAssociationMixin, BelongsToManyRemoveAssociationMixin } from 'sequelize';
 
 import type { User } from './user.js'
 import { Ingredient } from './ingredient.js';
@@ -22,6 +22,8 @@ export class Fridge
 
     declare addIngredient: BelongsToManyAddAssociationMixin<Ingredient, Ingredient['id']>;
     declare addIngredients: BelongsToManyAddAssociationMixin<Ingredient[], Ingredient['id'][]>;
+
+    declare removeIngredient: BelongsToManyRemoveAssociationMixin<Ingredient, Ingredient['id']>;
 }
 
 export function FridgeFactory(sequelize: Sequelize): typeof Fridge {
@@ -33,7 +35,8 @@ export function FridgeFactory(sequelize: Sequelize): typeof Fridge {
                 primaryKey: true,
             }, 
             userId: {
-                type: DataTypes.INTEGER
+                type: DataTypes.INTEGER,
+                unique: true
             }
         },
         {
