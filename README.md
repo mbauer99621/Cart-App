@@ -1,4 +1,5 @@
-# QuikCart
+![Screenshot 2025-02-19 at 2 22 35 PM](https://github.com/user-attachments/assets/78290b7d-70ea-45af-ac44-518688b9de8a)
+
 ![MIT License](https://img.shields.io/badge/License-MIT-green.svg)
 
 QuikCart is a responsive recipe website built with React, Vite, and Tailwind CSS. The user may create an account with a username, password, and profile picture. In the website, they are given a cart, a fridge, and many options for recipes they might try. They can select a recipe, save it to their list of recipes, and add the ingredients from it in to their cart. If the user already has it in their fridge, it will not be added. The user may also manually set what is in their cart and their fridge. 
