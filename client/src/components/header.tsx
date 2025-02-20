@@ -8,7 +8,7 @@ export default function Nav() {
     { path: "/MyFridge", label: "My Fridge" },
     { path: "/MyCart", label: "My Cart" },
     { path: "/MyAccount", label: "My Account" },
-    { path: "/LoginPage", label: "Login" },
+    { path: "/login", label: "Login" },
   ];
 
   const reorderedLinks = [
