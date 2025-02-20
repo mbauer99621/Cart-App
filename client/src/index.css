@@ -59,7 +59,7 @@
   
   button {
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: 1px solid black;
     padding: 0.6em 1.2em;
     font-size: 1em;
     font-weight: 500;
@@ -68,6 +68,7 @@
     cursor: pointer;
     transition: border-color 0.25s;
   }
+
   button:hover {
     border-color: gray;
   }
@@ -184,4 +185,25 @@
   src: url('./assets/customfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+}
+
+
+
+.recipe-image {
+  width: 100%; 
+  max-width: 500px; 
+  height: auto; 
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .recipe-image {
+      max-width: 200px; /* Smaller max-width for mobile screens */
+  }
+}
+
+
+#saveButton {
+  padding: 8px;
+
 }

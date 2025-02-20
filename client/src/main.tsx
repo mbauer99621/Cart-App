@@ -13,6 +13,7 @@ import SavedRecipes from './pages/SavedRecipes.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
 import MyAccount from './pages/MyAccount.tsx';
 import CategoryRecipes from './components/CategoryRecipes.tsx';
+import RecipePage from "./pages/RecipePage";
 
 
 import { AuthProvider } from './context/AuthProvider.tsx';
@@ -62,7 +63,10 @@ const router = createBrowserRouter([
         path: '/category/:categoryName',
         element: <CategoryRecipes />,
       },
-      
+      {
+        path: '/recipe/:idMeal',  // Add the route for the individual recipe page
+        element: <RecipePage />,
+      },
     ],
   },
 ]);
