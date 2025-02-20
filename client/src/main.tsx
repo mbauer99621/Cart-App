@@ -48,7 +48,7 @@ const router = createBrowserRouter([
         element: <MyFridge />,
       },
       {
-        path: '/SavedRecipes',
+        path: '/saved-recipes',
         element: <SavedRecipes />,
       },
       {

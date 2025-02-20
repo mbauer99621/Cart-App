@@ -52,6 +52,8 @@ export interface Recipe {
 	strImageSource: string,
 	strCreativeCommonsConfirmed: string,
 	dateModified: string
+	[key: `strIngredient${number}`]: string | undefined;
+	[key: `strMeasure${number}`]: string | undefined;
 }
 
 export interface RecipeCard {

@@ -26,14 +26,16 @@ Fridge.belongsTo(User, { foreignKey: 'userId', onDelete: "CASCADE" });
 User.hasOne(Cart, { foreignKey: 'userId' });
 Cart.belongsTo(User, { foreignKey: 'userId', onDelete: "CASCADE" });
 
-User.belongsToMany(Recipe, { through: 'UserRecipes', foreignKey: 'userId' });
-Recipe.belongsToMany(User, { through: 'UserRecipes', foreignKey: 'recipeId' });
+User.belongsToMany(Recipe, { through: UserRecipes, foreignKey: 'userId' });
+Recipe.belongsToMany(User, { through: UserRecipes, foreignKey: 'recipeId' });
 
 Cart.belongsToMany(Ingredient, { through: 'cartIngredients', foreignKey: 'cartId' });
 Ingredient.belongsToMany(Cart, { through: 'cartIngredients', foreignKey: 'ingredientId' });
 
 Fridge.belongsToMany(Ingredient, { through: 'fridgeIngredients', foreignKey: 'fridgeId' });
 Ingredient.belongsToMany(Fridge, { through: 'fridgeIngredients', foreignKey: 'ingredientId' });
+
+UserRecipes.belongsTo(Recipe, {foreignKey: 'recipeId'});
 
 // Manually Sync Database
 async function syncDatabase() {

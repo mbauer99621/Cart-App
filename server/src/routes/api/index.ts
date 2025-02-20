@@ -6,7 +6,7 @@ import ingredientRoutes from './ingredientRoutes.js'
 
 const router = Router();
 
-router.use('/recipe', recipeRoutes);
+router.use('/recipes', recipeRoutes);
 router.use('/fridge', fridgeRoutes);
 router.use('/cart', cartRoutes);
 router.use('/ingredient', ingredientRoutes);

@@ -4,7 +4,7 @@ export default function Nav() {
   // Original links array
   const links = [
     { path: "/", label: "Home" },
-    { path: "/SavedRecipes", label: "My Recipes" },
+    { path: "/saved-recipes", label: "My Recipes" },
     { path: "/MyFridge", label: "My Fridge" },
     { path: "/MyCart", label: "My Cart" },
     { path: "/MyAccount", label: "My Account" },
