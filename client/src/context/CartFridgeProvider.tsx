@@ -46,10 +46,11 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
       }
     };
   
-    const moveToFridge = (id: number) => {
+    const moveToFridge = async (id: number) => {
       const itemToMove = cartItems.find((item) => item.id === id);
       if (itemToMove) {
         setFridgeItems([...fridgeItems, itemToMove]);
+        await DeleteFromCart(itemToMove.name, auth.getProfile().id);
         setCartItems(cartItems.filter((item) => item.id !== id));
       }
     };
