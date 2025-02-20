@@ -1,6 +1,6 @@
 //import { useEffect, useState } from "react";
 import { Categories } from "../interfaces/Categories.js";
-import { Meal, Meals } from "../interfaces/Meals.js";
+import { Meals } from "../interfaces/Meals.js";
 import { Recipe, RecipeCard } from "../interfaces/RecipeCard.js";
 import Auth from '../utils/auth';
 
@@ -105,33 +105,67 @@ const retreiveRecipeById = async (id: string): Promise<Recipe> => {
     }
 }
 
-export const fetchSavedRecipes = async (userId: number): Promise<Meal[]> => {
+// export const fetchSavedRecipes = async (userId: number): Promise<Meal[]> => {
+//     try {
+//         const token = Auth.getToken();
+//         console.log("🔍 Fetching saved recipes with token:", token);
+
+//         const response = await fetch(`/api/recipe/saved-recipes/${userId}`, {
+//             method: "GET",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 Authorization: `Bearer ${token}`,
+//             },
+//         });
+
+//         if (!response.ok) {
+//             const data = await response.json();
+//             throw new Error(data.message || "Failed to fetch saved recipes.");
+//         }
+
+//         const data = await response.json();
+//         console.log("✅ Saved recipes fetched successfully:", data);
+
+//         return data.meals as [];
+//     } catch (err) {
+//         console.error("❌ Error fetching saved recipes:", err);
+//         return [];
+//     }
+// };
+
+export const fetchSavedRecipes = async () => {
+    const userId = sessionStorage.getItem("userId");
+    const token = sessionStorage.getItem("token");
+  
+    if (!userId || !token) {
+      console.error("User ID not found in sessionStorage");
+      return Promise.reject("User not found. Please log in.");
+    }
+  
     try {
-        const token = Auth.getToken();
-        console.log("🔍 Fetching saved recipes with token:", token);
-
-        const response = await fetch(`/api/recipe/saved-recipes/${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || "Failed to fetch saved recipes.");
+      const response = await fetch(`/api/recipes/save-recipe/${userId}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
         }
-
+      });
+  
+      if (!response.ok) {
         const data = await response.json();
-        console.log("✅ Saved recipes fetched successfully:", data);
+        throw new Error(data.message || "Failed to fetch saved recipes");
+      }
+  
+      const data = await response.json();
+      console.log("📦 Fetched saved recipes data:", data);
 
-        return data.meals as [];
-    } catch (err) {
-        console.error("❌ Error fetching saved recipes:", err);
-        return [];
+      return data.meals || [];
+    } catch (error) {
+      console.error("❌ Error loading saved recipes:", error);
+      return Promise.reject("Failed to load saved recipes.");
     }
 };
 
+  
+  
 
 export { retrieveRandomRecipe, retrieveRecipeCategories, retrieveMealsByCategory, retreiveRecipeById }
