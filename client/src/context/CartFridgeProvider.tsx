@@ -1,6 +1,7 @@
 import { useEffect, useState, ReactNode } from "react";
 import { CartFridgeContext } from "./CartFridgeContext";
-import { retrieveCart, addToCart as addToCartApi } from "../api/cartAPI.js";
+import { retrieveCart, addToCart as addToCartApi, DeleteFromCart } from "../api/cartAPI.js";
+import { addIngredient } from "../api/ingredientAPI.js";
 import auth from '../utils/auth.js'
 //import { AddIngredientsToCartButton } from "../components/AddIngredientsToCartButton";
 
@@ -32,20 +33,24 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
       const retreiveData = async () => {
         // console.log(auth.getProfile());
         const data = await retrieveCart(auth.getProfile().id);
-        setCartItems(data  || cartItems);
+        setCartItems(data || cartItems);
       }
       retreiveData();
     }, [])
 
-    const removeFromCart = (id: number) => {
-      setCartItems((prev) => prev.filter((item) => item.id !== id));
-      localStorage.setItem("cart", JSON.stringify(cartItems.filter((item) => item.id !== id)));
+    const removeFromCart = async (id: number) => {
+      const itemToDelete = cartItems.find((item) => item.id === id);
+      if (itemToDelete) {
+        await DeleteFromCart(itemToDelete.name, auth.getProfile().id);
+        setCartItems(cartItems.filter((item) => item.id !== id));
+      }
     };
   
-    const moveToFridge = (id: number) => {
+    const moveToFridge = async (id: number) => {
       const itemToMove = cartItems.find((item) => item.id === id);
       if (itemToMove) {
         setFridgeItems([...fridgeItems, itemToMove]);
+        await DeleteFromCart(itemToMove.name, auth.getProfile().id);
         setCartItems(cartItems.filter((item) => item.id !== id));
       }
     };
@@ -114,6 +119,7 @@ export const CartFridgeProvider = ({ children }: { children: ReactNode }) => {
       }));
       
       for (const item of newItems) {
+        await addIngredient(item.name);
         await addToCartApi(item.name, auth.getProfile().id);
       }
 

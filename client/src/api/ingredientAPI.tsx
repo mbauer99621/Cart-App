@@ -21,6 +21,10 @@ const addIngredient = async (name: string) => {
         const responseData = await response.json();
 
         if(!response.ok) {
+            if (response.status === 403) {
+                console.warn(response.statusText);
+                return null;
+            }
             throw new Error(response.statusText);
         }
 

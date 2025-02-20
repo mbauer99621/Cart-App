@@ -89,7 +89,7 @@ const addToCart = async (name: string, userId: number | null) => {
     }
 }
 
-const DeleteFromCart = async (name: string, userId: number) => {
+const DeleteFromCart = async (name: string, userId: number | null) => {
     const body = {
         name: name,
         userId: userId
