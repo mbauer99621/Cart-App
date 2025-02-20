@@ -5,7 +5,6 @@ import { jwtDecode } from 'jwt-decode';
 import type { UserData } from '../interfaces/UserData';
 
 class AuthService {
-  private token: string | null = null; //store token in memory
 
   // Decode the JSON Web Token (JWT) using the jwtDecode function, specifying the expected payload type as UserData.
     // The getToken() method is called to retrieve the JWT, which is then passed to jwtDecode to extract and return its payload.
@@ -37,17 +36,16 @@ class AuthService {
   }
 
   getToken(): string {
-    return this.token || localStorage.getItem("id_token") || "";
+    return sessionStorage.getItem("token") || "";
   }
 
   login(idToken: string) {
-    this.token = idToken; // Store in memory instead of localStorage
-    localStorage.setItem("id_token", idToken);
+    sessionStorage.setItem("token", idToken);
     window.location.assign('/');
   }
 
   logout() {
-    this.token = null;
+    sessionStorage.removeItem("token");
     window.location.assign('/');
   }
 }

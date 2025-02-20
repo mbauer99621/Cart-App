@@ -21,8 +21,7 @@ router.post("/signup", async (req: Request, res: Response): Promise<Response | v
       return res.status(400).json({ success: false, message: "Email is already in use." });
     }
 
-    // Create new user
-    //await User.create({ username, email, password: hashedPassword });
+    //let sequelize hooks handle password hashing
     await User.create({ username, email, password });
 
     res.status(201).json({ success: true, message: "User registered successfully." });
@@ -33,45 +32,103 @@ router.post("/signup", async (req: Request, res: Response): Promise<Response | v
 });
 
 
-export const login = async (req: Request, res: Response): Promise<Response> => {
-  const { username, password } = req.body;
-  console.log("Login attempt for:", username);
+// export const login = async (req: Request, res: Response): Promise<Response> => {
+//   const { username, password } = req.body;
+//   console.log("Login attempt for:", username);
 
-try {
-  const user = await User.findOne({
-    where: { username },
-  });
+// try {
+//   const user = await User.findOne({ where: { username } });
 
-  if (!user) {
-    console.error("User not found:", username);
-    return res.status(401).json({ message: 'Authentication failed: User not found' });
-  }
+//   if (!user) {
+//     console.error("User not found:", username);
+//     return res.status(401).json({ message: 'Authentication failed: User not found' });
+//   }
   
-  console.log("✅ Found user:", user.username);
-  console.log("🔑 Stored hashed password:", user.password);
-  console.log("🔑 Entered password:", password);
+//   console.log("✅ Found user:", user.username);
+//   console.log("🔑 Stored hashed password:", user.password);
+//   console.log("🔑 Entered password:", password);
 
-  const passwordIsValid = await bcrypt.compare(password, user.password);
-  if (!passwordIsValid) {
-    console.error("Invalid password for user:", username);
-    return res.status(401).json({ message: 'Authentication failed: Invalid password' });
-  }
+//   const passwordIsValid = await bcrypt.compare(password, user.password);
+//   if (!passwordIsValid) {
+//     console.error("Invalid password for user:", username);
+//     return res.status(401).json({ message: 'Authentication failed: Invalid password' });
+//   }
 
-  const secretKey = process.env.JWT_SECRET_KEY || '';
-  if (!secretKey) {
-    console.error("JWT secret key is missing");
-    return res.status(500).json({ message: "Server error: Missing JWT secret key" });
-  }
+//   const secretKey = process.env.JWT_SECRET_KEY;
+//   if (!secretKey) {
+//     console.error("JWT secret key is missing");
+//     return res.status(500).json({ message: "Server error: Missing JWT secret key" });
+//   }
 
-  const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, secretKey, { expiresIn: '12h' });
-  console.log("Login successful, token generated for:", username);
-  return res.json({ token });
-  
-} catch (error) {
-  console.error("Error during login:", error);
-  return res.status(500).json({ message: "Internal server error" });
+//   const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, secretKey, { expiresIn: '12h' });
+//   console.log("Login successful, token generated for:", username);
+
+//   if (!token || token.split('.').length !== 3) {
+//     console.error("❌ Invalid JWT generated:", token);
+//     return res.status(500).json({ message: "Error generating valid token." });
+//   }
+
+//   console.log("✅ Login successful, sending token...");
+//   console.log("🛠️ Full response being sent:", JSON.stringify({ token }));
+//   return res.json({ token });
+
+// } catch (error) {
+//   console.error("Error during login:", error);
+//   return res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+router.post('/login', async (req, res) => {
+  try {
+    console.log("🔐 Login request received.");
+
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+
+    if (!user) {
+      console.error("❌ User not found:", username);
+      return res.status(401).json({ success: false, message: 'Authentication failed: User not found' });
+    }
+
+    console.log("✅ Found user:", user.username);
+
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
+      console.error("❌ Invalid password for user:", username);
+      return res.status(401).json({ success: false, message: 'Authentication failed: Invalid password' });
+    }
+
+    const secretKey = process.env.JWT_SECRET_KEY;
+    if (!secretKey) {
+      console.error("❌ Missing JWT Secret Key");
+      return res.status(500).json({ message: "Server error: Missing JWT secret key" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username, email: user.email }, 
+      secretKey, 
+      { expiresIn: '12h' }
+    );
+
+    console.log("✅ Login successful, sending response.");
+
+    // 🚀 Ensure the `user` object is sent in the response
+    return res.json({
+      success: true,
+      message: "Login successful!",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+
+  } catch (error) {
+    console.error("❌ Error in login route:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
-};
+});
 
 router.get("/get-user/:username", authenticateToken, async (req: Request, res: Response) => {
   try {
@@ -84,10 +141,6 @@ router.get("/get-user/:username", authenticateToken, async (req: Request, res: R
       console.error("❌ User not found:", username);
       return res.status(404).json({ success: false, message: "User not found" });
     }
-    //res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-    //res.setHeader("Pragma", "no-cache");
-    //res.setHeader("Expires", "0");
-    //res.setHeader("Surrogate-Control", "no-store");
 
     console.log("✅ Found user:", user.username, user.email);
     return res.json({
@@ -101,15 +154,5 @@ router.get("/get-user/:username", authenticateToken, async (req: Request, res: R
   }
 });
 
-
-// POST /login - Login a user
-router.post('/LoginPage', async (req, res) => {
-  try {
-    await login(req, res);
-  } catch (error) {
-    console.error("Error in login route:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
 
 export default router;

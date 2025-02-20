@@ -1,25 +1,24 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
-import Auth from '../utils/auth';
-import { login } from '../api/authAPI';
-import type { UserLogin } from '../interfaces/UserLogin';
+//import Auth from '../utils/auth';
+//import { login } from '../api/authAPI';
+//import type { UserLogin } from '../interfaces/UserLogin';
+import { login, LoginResponse } from "../api/authAPI";
 import FoodEmojis from '../components/UI/FoodEmojis';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const Login = () => {
-  const [loginData, setLoginData] = useState<UserLogin>({
-    username: '',
-    password: '',
+const LoginPage = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
   });
 
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setLoginData({
-      ...loginData,
-      [name]: value,
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -27,17 +26,51 @@ const Login = () => {
     e.preventDefault();
     setError(null);
 
-    try {
-        const data = await login(loginData);
-        if (!data.token) {
-          throw new Error('Invalid credentials, please try again');
-        }
-        Auth.login(data.token);
-      } catch (err) {
-        setError('Login failed. Please check your credentials.');
-        console.error('Failed to login', err);
-      }
-    };
+    try{
+    const response: LoginResponse = await login(formData);
+
+    console.log("🔐 Login response:", response);
+
+    if (!response || typeof response !== "object") {
+      console.error("❌ Unexpected response format:", response);
+      setError("Unexpected error. Please try again.");
+      return;
+    }
+
+    if (response.success === undefined) {
+      console.error("❌ `success` field is missing.");
+      setError("Unexpected server response.");
+      return;
+    }
+
+    if (!response.success) {
+      console.error("❌ Login failed:", response.message);
+      setError(response.message || "Invalid credentials.");
+      return;
+    }
+
+    if (!response.token) {
+      console.error("❌ No token received.");
+      setError("Server did not return a valid token.");
+      return;
+    }
+
+    console.log("✅ Received token:", response.token);
+
+    // ✅ Store the JWT token in sessionStorage
+    sessionStorage.setItem("token", response.token);
+    sessionStorage.setItem("userId", response.user?.id?.toString() || ""); // Convert ID to string for storage
+    sessionStorage.setItem("username", response.user?.username || "");
+    sessionStorage.setItem("email", response.user?.email || "");
+    console.log("✅ User data stored in sessionStorage:", response.user);
+
+    // ✅ Redirect to the main app or dashboard
+    navigate("/");
+  } catch (error) {
+    console.error("Error in login request:", error);
+    setError("An error occurred. Please try again");
+  }
+  };
 
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-gray-100 relative overflow-hidden">
@@ -60,8 +93,9 @@ const Login = () => {
                 type="text"
                 name="username"
                 placeholder="Enter your username"
-                value={loginData.username || ''}
+                value={formData.username || ''}
                 onChange={handleChange}
+                required
               />
             </div>
     
@@ -73,8 +107,9 @@ const Login = () => {
                 type="password"
                 name="password"
                 placeholder="Enter your password"
-                value={loginData.password || ''}
+                value={formData.password || ''}
                 onChange={handleChange}
+                required
               />
             </div>
     
@@ -101,4 +136,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginPage;

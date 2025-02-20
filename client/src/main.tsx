@@ -13,7 +13,7 @@ import SavedRecipes from './pages/SavedRecipes.tsx';
 import SignUpPage from './pages/SignUpPage.tsx';
 import MyAccount from './pages/MyAccount.tsx';
 import CategoryRecipes from './components/CategoryRecipes.tsx';
-import RecipePage from "./pages/RecipePage";
+import RecipePage from "./pages/RecipePage.tsx";
 
 
 import { AuthProvider } from './context/AuthProvider.tsx';
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/LoginPage',
+        path: '/login',
         element: <Login />,
       },
       {

@@ -1,5 +1,6 @@
 import { DataTypes, type Sequelize, Model, type Optional } from 'sequelize';
 import bcrypt from 'bcrypt';
+import Recipe from './recipe';
 
 interface UserAttributes {
   id: number;
@@ -21,6 +22,7 @@ implements UserAttributes
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public readonly Recipes?: Recipe[];
 
   // Hash the password before saving the user
   public async setPassword(password: string) {

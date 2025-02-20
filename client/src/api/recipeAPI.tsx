@@ -1,6 +1,6 @@
 //import { useEffect, useState } from "react";
 import { Categories } from "../interfaces/Categories.js";
-import { Meals } from "../interfaces/Meals.js";
+import { Meal, Meals } from "../interfaces/Meals.js";
 import { Recipe, RecipeCard } from "../interfaces/RecipeCard.js";
 import Auth from '../utils/auth';
 
@@ -104,6 +104,34 @@ const retreiveRecipeById = async (id: string): Promise<Recipe> => {
         return Promise.reject('Could not fetch recipe categories.');
     }
 }
+
+export const fetchSavedRecipes = async (userId: number): Promise<Meal[]> => {
+    try {
+        const token = Auth.getToken();
+        console.log("🔍 Fetching saved recipes with token:", token);
+
+        const response = await fetch(`/api/recipe/saved-recipes/${userId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || "Failed to fetch saved recipes.");
+        }
+
+        const data = await response.json();
+        console.log("✅ Saved recipes fetched successfully:", data);
+
+        return data.meals as [];
+    } catch (err) {
+        console.error("❌ Error fetching saved recipes:", err);
+        return [];
+    }
+};
 
 
 export { retrieveRandomRecipe, retrieveRecipeCategories, retrieveMealsByCategory, retreiveRecipeById }

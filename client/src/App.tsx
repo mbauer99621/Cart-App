@@ -3,7 +3,7 @@ import Nav from './components/header';
 import Footer from './components/footer';
 function App() {
   const location = useLocation();
-  const hideNavPaths = ["/LoginPage", "/signup"];
+  const hideNavPaths = ["/login", "/signup"];
   return (
     <div>
       {!hideNavPaths.includes(location.pathname) && <Nav />}

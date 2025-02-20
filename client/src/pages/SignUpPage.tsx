@@ -36,7 +36,7 @@ const SignUpPage = () => {
       await makeCart(userId);
       await makeFridge(userId);
       */
-      navigate("/LoginPage"); // Redirect to login page after successful signup
+      navigate("/login"); // Redirect to login page after successful signup
     } catch (err) {
       setError("Signup failed. Please try again.");
       console.error("Signup error:", err);
@@ -106,7 +106,7 @@ const SignUpPage = () => {
         {/* Login Link */}
           <p className="text-center text-gray-600 text-sm mt-4">
             Already have an account?{" "}
-            <Link to="/LoginPage" className="text-blue-500 hover:underline">
+            <Link to="/login" className="text-blue-500 hover:underline">
               Login
             </Link>
           </p>
